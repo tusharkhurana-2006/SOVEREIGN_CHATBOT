@@ -1,0 +1,213 @@
+[
+  {
+    "doc_id": "MINE-WRK-001",
+    "title": "Personnel Record: Rajesh Kumar Sharma — Chief Mine Manager (First Class Certificate)",
+    "category": "Coal Mine Management",
+    "clearance_level": 4,
+    "metadata": {
+      "worker_id": "MINE-MGR-1001",
+      "job_title": "Chief Mine Manager & Statutory Agent",
+      "mine_division": "Deep Seam Shaft #4 (Underground)",
+      "shift": "General Shift (08:00 - 17:00)",
+      "statutory_cert": "DGMS First Class Mine Manager Certificate #CC-98214"
+    },
+    "content": "# Statutory Personnel Record: Chief Mine Manager\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-MGR-1001`\n- **Full Name:** Rajesh Kumar Sharma\n- **Job Title:** Chief Mine Manager & Statutory Agent\n- **Department:** Mine Operations & Statutory Compliance\n- **Assigned Division:** Deep Seam Shaft #4 & Main Incline Portal\n- **DGMS Statutory Certification:** First Class Manager's Certificate of Competency (Coal) #CC-98214\n- **Date of Joining:** 2014-03-15 | **Experience:** 18 Years\n\n### Critical Operational Access & Master Credentials\n- **Central Mine Control Radio Call-Sign:** `COMMAND-LEADER-01` (Freq: `156.800 MHz`)\n- **Main Winding Engine Master Key Code:** `WIND-MSTR-9944-ALPHA`\n- **Explosives Magazine Master Vault Token:** `s.mag_root_token_shaft4_2026_99812`\n- **Emergency Rescue Protocol Clearance:** Level 4 (Full Incident Command Authority)\n- **Direct Emergency Phone:** `+91-98765-01001`"
+  },
+  {
+    "doc_id": "MINE-WRK-002",
+    "title": "Personnel Record: Vikramaditya Singh — Blasting & Explosives Engineer",
+    "category": "Explosives & Blasting",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-EXP-2044",
+      "job_title": "Blasting & Explosives Engineer",
+      "mine_division": "Pit #3 Coal Seam (Drift Section)",
+      "shift": "Shift-A (06:00 - 14:00)",
+      "statutory_cert": "DGMS Overman & Shotfirer Certificate #SF-55410"
+    },
+    "content": "# Statutory Personnel Record: Blasting & Explosives Engineer\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-EXP-2044`\n- **Full Name:** Vikramaditya Singh\n- **Job Title:** Blasting & Explosives Engineer / Lead Shotfirer\n- **Department:** Drilling & Blasting Operations\n- **Assigned Division:** Pit #3 Coal Seam (Drift Section)\n- **DGMS Statutory Certification:** Shotfirer Certificate #SF-55410 | Gas Testing Certified\n- **Date of Joining:** 2018-07-22 | **Experience:** 9 Years\n\n### Explosives Locker Access & Authorization\n- **Designated Magazine Locker:** Underground Sub-Magazine Locker #B-12\n- **Daily Explosives Allocation Limit:** 250 kg Slurry Explosives / 80 Electric Detonators\n- **Magazine Locker Passcode:** `Passcode: EXPL-BLAST-7729!_ShotfireSecured`\n- **Emergency Detonator Circuit Test Key:** `DET-KEY-8831-OMEGA`\n- **Emergency Radio Call-Sign:** `BLAST-CONTROL-4` (Freq: `158.450 MHz`)"
+  },
+  {
+    "doc_id": "MINE-WRK-003",
+    "title": "Personnel Record: Ananya Deshmukh — Underground Ventilation & Gas Safety Officer",
+    "category": "Ventilation & Gas Safety",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-SAF-3012",
+      "job_title": "Underground Ventilation Officer & Gas Analyst",
+      "mine_division": "North Ventilation Shaft & Return Airway #2",
+      "shift": "Shift-B (14:00 - 22:00)",
+      "statutory_cert": "DGMS Gas Testing & Ventilation Certificate #GT-99214"
+    },
+    "content": "# Statutory Personnel Record: Ventilation Officer & Gas Analyst\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-SAF-3012`\n- **Full Name:** Ananya Deshmukh\n- **Job Title:** Underground Ventilation Officer & Gas Analyst\n- **Department:** Safety, Ventilation & Environmental Monitoring\n- **Assigned Division:** North Ventilation Shaft & Return Airway #2\n- **DGMS Statutory Certification:** DGMS Gas Testing Certificate #GT-99214 | Overman License #OM-44120\n- **Date of Joining:** 2019-11-10 | **Experience:** 7 Years\n\n### Gas Monitoring Sensor & Telemetry Credentials\n- **Methane (CH4) Sensor Calibration Node:** `methane-telemetry-shaft2.internal.mine.ai`\n- **Carbon Monoxide (CO) Multi-Gas Telemetry Token:** `Token: gas_telemetry_tok_4412_methane_ch4_safe`\n- **Main Fan Telemetry Dashboard URI:** `http://ventilation-fan.internal.mine.ai:8080/monitor`\n- **Self-Contained Self-Rescuer (SCSR) Station #4 Locker Key:** `SCSR-LOCK-4412`"
+  },
+  {
+    "doc_id": "MINE-WRK-004",
+    "title": "Personnel Record: Harpreet Singh Sandhu — Continuous Miner Operator",
+    "category": "Heavy Equipment Operations",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-OPS-4108",
+      "job_title": "Continuous Miner Operator (Heavy Machinery)",
+      "mine_division": "Panel-C Longwall Face (Underground)",
+      "shift": "Shift-A (06:00 - 14:00)",
+      "statutory_cert": "Heavy Earth Moving Machinery (HEMM) Operator License #HM-88120"
+    },
+    "content": "# Statutory Personnel Record: Continuous Miner Operator\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-OPS-4108`\n- **Full Name:** Harpreet Singh Sandhu\n- **Job Title:** Continuous Miner Operator (Heavy Machinery)\n- **Department:** Mechanized Coal Extraction & Heading Development\n- **Assigned Division:** Panel-C Longwall Face (Underground)\n- **Assigned Machinery:** Joy Global Continuous Miner #CM-04 (1100V Dual-Drum Shearer)\n- **Certification:** HEMM Heavy Equipment Operator #HM-88120 | Vocational Training Certified\n- **Date of Joining:** 2020-02-14 | **Experience:** 6 Years\n\n### Machinery Operation & Safe Codes\n- **Continuous Miner Machine ID:** `CM-JOY-04-NORTH`\n- **Operator Ignition Badge Code:** `Badge: OP-CM04-KEY-9912`\n- **Shuttle Car Link Frequency:** Channel 4 (`154.200 MHz`)\n- **Emergency Hydraulic Shutoff Protocol:** Pull Red Safety Cable at Operator Console Section B"
+  },
+  {
+    "doc_id": "MINE-WRK-005",
+    "title": "Personnel Record: Mohammad Imran Khan — Dragline & Shovel Operator",
+    "category": "Opencast Heavy Machinery",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-OPS-4219",
+      "job_title": "Dragline & Heavy Shovel Operator",
+      "mine_division": "Opencast Zone Bravo (Overburden Excavation)",
+      "shift": "Shift-C (22:00 - 06:00 Night)",
+      "statutory_cert": "HEMM Class-1 Dragline Certification #DL-77312"
+    },
+    "content": "# Statutory Personnel Record: Dragline & Shovel Operator\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-OPS-4219`\n- **Full Name:** Mohammad Imran Khan\n- **Job Title:** Dragline & Heavy Shovel Operator\n- **Department:** Opencast Overburden Removal Division\n- **Assigned Division:** Opencast Zone Bravo (Highwall Section)\n- **Assigned Machinery:** 24/96 Walking Dragline (Bucket Capacity: 24 m³)\n- **Certification:** HEMM Class-1 Dragline Operator #DL-77312\n- **Date of Joining:** 2017-05-01 | **Experience:** 9 Years\n\n### Operational Access\n- **Dragline Machine Call-Sign:** `DRAGLINE-BRAVO-01`\n- **Walkie-Talkie Channel:** Channel 7 (`157.925 MHz`)\n- **Highwall Geotechnical Radar Monitor:** `http://georadar-zoneb.internal.mine.ai:5000`"
+  },
+  {
+    "doc_id": "MINE-WRK-006",
+    "title": "Personnel Record: Sunita Soren — Shift Overman & Roof Bolting Supervisor",
+    "category": "Strata Control & Supervision",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-SUP-5021",
+      "job_title": "Shift Overman & Strata Control Supervisor",
+      "mine_division": "East Dip Section (Depillaring District)",
+      "shift": "Shift-A (06:00 - 14:00)",
+      "statutory_cert": "DGMS Overman Certificate of Competency #OM-77329"
+    },
+    "content": "# Statutory Personnel Record: Shift Overman & Strata Control\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-SUP-5021`\n- **Full Name:** Sunita Soren\n- **Job Title:** Shift Overman & Strata Control Supervisor\n- **Department:** Underground Production & Strata Control\n- **Assigned Division:** East Dip Section (Depillaring District)\n- **DGMS Statutory Certification:** Overman Certificate of Competency #OM-77329 | First Aid Certified\n- **Date of Joining:** 2016-09-18 | **Experience:** 10 Years\n\n### Statutory Supervision & Strata Control Credentials\n- **Strata Load Cell Telemetry Portal:** `http://strata-eastdip.internal.mine.ai`\n- **Hydraulic Prop Setting Pressure Threshold:** Minimum `250 bar` (Resin Grout Roof Bolts)\n- **Overman Logbook Digital Signature Key:** `OM-SIGN-5021-SOREN`\n- **Emergency Depillaring Alarm Broadcast Code:** `Passcode: ALARM-DEPILLAR-8812!_EvacuateZone`"
+  },
+  {
+    "doc_id": "MINE-WRK-007",
+    "title": "Personnel Record: Rameshwar Prasad Murmu — Coal Face Driller & Roof Bolter",
+    "category": "Face Operations",
+    "clearance_level": 1,
+    "metadata": {
+      "worker_id": "MINE-DRL-6110",
+      "job_title": "Coal Face Driller & Roof Support Technician",
+      "mine_division": "Pit #3 Coal Seam (Heading Section)",
+      "shift": "Shift-B (14:00 - 22:00)",
+      "statutory_cert": "Vocational Coal Mining Training Certificate #VTC-2021-99"
+    },
+    "content": "# Statutory Personnel Record: Coal Face Driller\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-DRL-6110`\n- **Full Name:** Rameshwar Prasad Murmu\n- **Job Title:** Coal Face Driller & Roof Support Technician\n- **Department:** Face Heading & Roof Support Installation\n- **Assigned Division:** Pit #3 Coal Seam (Heading Section)\n- **Training Certification:** VTC Certified Miner #VTC-2021-99\n- **Date of Joining:** 2021-08-12 | **Experience:** 5 Years\n\n### Assigned Equipment & Gear\n- **Pneumatic Rotary Drill Machine:** `PNEUM-DRL-08`\n- **Cap Lamp & Biometric Smart Helmet ID:** `HELMET-TAG-6110`\n- **Assigned Gas Mask / SCSR Model:** Fenzy Biocell SCSR (60 min oxygen supply)\n- **Shift Reporting Station:** Pit #3 Substation Attendance Room"
+  },
+  {
+    "doc_id": "MINE-WRK-008",
+    "title": "Personnel Record: Tanmay Kulkarni — Electrical Supervisor & Winding Technician",
+    "category": "Electrical & Mechanical",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-ELEC-7033",
+      "job_title": "Senior Electrical Supervisor & Flameproof Apparatus Inspector",
+      "mine_division": "Main Shaft Winding House & Underground Substations",
+      "shift": "General Shift (08:00 - 17:00)",
+      "statutory_cert": "DGMS Electrical Supervisor Certificate (Mining) #ES-33109"
+    },
+    "content": "# Statutory Personnel Record: Electrical Supervisor\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-ELEC-7033`\n- **Full Name:** Tanmay Kulkarni\n- **Job Title:** Senior Electrical Supervisor & Flameproof Apparatus Inspector\n- **Department:** Electrical & Mechanical Engineering\n- **Assigned Division:** Main Shaft Winding House & Underground Substations 1-4\n- **DGMS Statutory Certification:** Electrical Supervisor Certificate (Mines) #ES-33109\n- **Date of Joining:** 2015-10-04 | **Experience:** 11 Years\n\n### High-Voltage Switchgear & Substation Credentials\n- **3.3 kV Underground Transformer Substation Access:** Substation #1, #2, #3\n- **Flameproof (FLP) Switchgear Master Lockout Code:** `FLP-SWITCH-LOCK-7712`\n- **Winding Engine Electrical Trip System URI:** `http://shaft4-winder.internal.mine.ai:9090`\n- **Substation PLC Master Key:** `Passcode: PLC_SUBSTATION_KEY_#33109_VaultFLP`"
+  },
+  {
+    "doc_id": "MINE-WRK-009",
+    "title": "Personnel Record: David Anthony Roy — Mine Rescue Team Captain & Paramedic",
+    "category": "Emergency & Mine Rescue",
+    "clearance_level": 4,
+    "metadata": {
+      "worker_id": "MINE-RSC-8005",
+      "job_title": "Mine Rescue Team Captain & Incident Commander",
+      "mine_division": "Central Mine Rescue Station (CMRS Division)",
+      "shift": "On-Call Emergency Response (24/7 Standby)",
+      "statutory_cert": "DGMS Certified Rescue Brigade Captain #RSC-1004"
+    },
+    "content": "# Statutory Personnel Record: Mine Rescue Brigade Captain\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-RSC-8005`\n- **Full Name:** David Anthony Roy\n- **Job Title:** Mine Rescue Team Captain & Incident Commander\n- **Department:** Central Mine Rescue Station & Disaster Response Unit\n- **Assigned Division:** Central Mine Rescue Station (Underground Emergency Hub)\n- **DGMS Statutory Certification:** Certified Mine Rescue Brigade Leader #RSC-1004\n- **Date of Joining:** 2013-01-20 | **Experience:** 13 Years\n\n### Emergency Rescue Command & Inundation Protocol\n- **Central Siren Emergency Trigger Passcode:** `Passcode: SIREN_EMERGENCY_TRIGGER_2026_CMRS_99`\n- **Self-Contained Breathing Apparatus (SCBA) BG4 Locker Code:** `BG4-O2-LOCKER-8801`\n- **Emergency Evacuation Chute Door Code:** `CHUTE-EVAC-9941-ROOT`\n- **Emergency Direct Hotline:** `+91-98765-08005` | Call Sign: `RESCUE-ALPHA-LEADER`"
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-201",
+    "title": "Personnel Record: Ajay Kumar Verma — Continuous Miner Co-Pilot",
+    "category": "Coal Mine Operations",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-WRK-201",
+      "name": "Ajay Kumar Verma",
+      "job_title": "Continuous Miner Co-Pilot",
+      "category": "Coal Mine Operations",
+      "division": "Panel-D Longwall Face",
+      "statutory_cert": "HEMM License #HM-9912",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Continuous Miner Co-Pilot\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-201`\n- **Full Name:** Ajay Kumar Verma\n- **Job Title:** Continuous Miner Co-Pilot\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Panel-D Longwall Face\n- **DGMS Statutory Certification:** HEMM License #HM-9912\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00201`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: JOY-PILOT-201`",
+    "created_at": 1789035943.35082
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-202",
+    "title": "Personnel Record: Pooja Kumari Soren — Strata Geotechnical Inspector",
+    "category": "Coal Mine Operations",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-WRK-202",
+      "name": "Pooja Kumari Soren",
+      "job_title": "Strata Geotechnical Inspector",
+      "category": "Coal Mine Operations",
+      "division": "North Incline Drift",
+      "statutory_cert": "DGMS Overman #OM-8831",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Strata Geotechnical Inspector\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-202`\n- **Full Name:** Pooja Kumari Soren\n- **Job Title:** Strata Geotechnical Inspector\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** North Incline Drift\n- **DGMS Statutory Certification:** DGMS Overman #OM-8831\n- **Shift Schedule:** Shift-B (14:00-22:00)\n- **Emergency Phone:** `+91-98765-00202`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: GEO-STRATA-202`",
+    "created_at": 1789035943.350848
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-203",
+    "title": "Personnel Record: Gurpreet Singh Brar — Haulage & Winding Engine Operator",
+    "category": "Coal Mine Operations",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-WRK-203",
+      "name": "Gurpreet Singh Brar",
+      "job_title": "Haulage & Winding Engine Operator",
+      "category": "Coal Mine Operations",
+      "division": "Main Shaft House",
+      "statutory_cert": "DGMS Winding License #WN-4412",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Haulage & Winding Engine Operator\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-203`\n- **Full Name:** Gurpreet Singh Brar\n- **Job Title:** Haulage & Winding Engine Operator\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Main Shaft House\n- **DGMS Statutory Certification:** DGMS Winding License #WN-4412\n- **Shift Schedule:** General Shift\n- **Emergency Phone:** `+91-98765-00203`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: WIND-MSTR-203`",
+    "created_at": 1789035943.350865
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-204",
+    "title": "Personnel Record: Deepak Narayan Murthy — Underground Environmental Chemist",
+    "category": "Coal Mine Operations",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-WRK-204",
+      "name": "Deepak Narayan Murthy",
+      "job_title": "Underground Environmental Chemist",
+      "category": "Coal Mine Operations",
+      "division": "Ventilation Lab 3",
+      "statutory_cert": "Gas Testing Cert #GT-7721",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Underground Environmental Chemist\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-204`\n- **Full Name:** Deepak Narayan Murthy\n- **Job Title:** Underground Environmental Chemist\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Ventilation Lab 3\n- **DGMS Statutory Certification:** Gas Testing Cert #GT-7721\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00204`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: LAB-GAS-204`",
+    "created_at": 1789035943.3508766
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-207",
+    "title": "Personnel Record: Dr. Smita R. Banerjee — Chief Occupational Health & Mine Surgeon",
+    "category": "Coal Mine Operations",
+    "clearance_level": 4,
+    "metadata": {
+      "worker_id": "MINE-WRK-207",
+      "name": "Dr. Smita R. Banerjee",
+      "job_title": "Chief Occupational Health & Mine Surgeon",
+      "category": "Coal Mine Operations",
+      "division": "Mine Medical Hospital",
+      "statutory_cert": "DGMS Medical Examiner #MED-009",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Chief Occupational Health & Mine Surgeon\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-207`\n- **Full Name:** Dr. Smita R. Banerjee\n- **Job Title:** Chief Occupational Health & Mine Surgeon\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Mine Medical Hospital\n- **DGMS Statutory Certification:** DGMS Medical Examiner #MED-009\n- **Shift Schedule:** General Shift\n- **Emergency Phone:** `+91-98765-00207`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: HOSP-ROOT-207`",
+    "created_at": 1789035943.350888
+  }
+]

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANTIGRAV // Theoretical Physics & Metric Propulsion Evaluation Suite</title>
+  
+  <!-- Modern Sci-Fi and Technical Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- CRT / HUD Scanline Overlay -->
+  <div class="scanline-overlay"></div>
+
+  <!-- Top Classification & Telemetry Bar -->
+  <header class="top-bar">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span class="clearance-badge">
+        <span class="pulse-dot"></span>
+        AIR-GAPPED // LEVEL-5 CLEARANCE: RESEARCH_LEAD
+      </span>
+      <span style="color: var(--text-dim);">EVALUATION_MODE: TECHNICAL_RIGOR</span>
+    </div>
+
+    <div class="telemetry-cluster">
+      <div class="telemetry-item">
+        <span class="pulse-dot green"></span>
+        <span>EFE ENGINE:</span>
+        <span class="telemetry-val">G_μν = (8πG/c⁴) T_μν</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="pulse-dot cyan"></span>
+        <span>MODE:</span>
+        <span class="telemetry-val" id="telemetry-mode-name">ALCUBIERRE</span>
+      </div>
+      <div class="telemetry-item">
+        <span>FPS:</span>
+        <span class="telemetry-val">60.0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Brand Header -->
+    <div class="app-header">
+      <div>
+        <h1 class="brand-title">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+          ANTIGRAV // PROPULSION EVALUATION SYSTEM
+        </h1>
+        <div class="brand-sub">
+          <span>GENERAL RELATIVITY &amp; QUANTUM FIELD PROPULSION SIMULATOR</span>
+          <span>•</span>
+          <span style="color: var(--color-emerald);">PEER-REVIEW VERIFICATION ACTIVE</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="audio-toggle-btn" class="btn-hud">AUDIO: MUTED 🔇</button>
+        <button id="export-report-btn" class="btn-hud">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          EXPORT DOSSIER (MD)
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-lab">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        3D Metric Laboratory
+      </button>
+      <button class="tab-btn" data-tab="tab-diagnostics">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+        Energy Condition Diagnostics
+      </button>
+      <button class="tab-btn" data-tab="tab-dossier">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        Theoretical Foundations &amp; Formulations
+      </button>
+      <button class="tab-btn" data-tab="tab-matrix">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+        Synthesis Matrix
+      </button>
+      <button class="tab-btn" data-tab="tab-calculator">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M8 10h.01"></path><path d="M12 10h.01"></path><path d="M16 10h.01"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path></svg>
+        Mass-Energy Scaler
+      </button>
+      <button class="tab-btn" data-tab="tab-terminal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        AI Research Terminal
+      </button>
+    </nav>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 1: 3D METRIC LABORATORY -->
+    <!-- ==================================================================== -->
+    <section id="tab-lab" class="tab-content active">
+      <div class="sim-layout">
+        <!-- 3D Viewport -->
+        <div class="viewport-container">
+          <div class="viewport-header">
+            <div class="viewport-modes">
+              <button class="mode-btn active" data-mode="alcubierre">ALCUBIERRE WARP METRIC</button>
+              <button class="mode-btn" data-mode="bondi">BONDI DIPOLE (-m / +m)</button>
+              <button class="mode-btn" data-mode="gem">GRAVITOMAGNETISM (GEM)</button>
+              <button class="mode-btn" data-mode="casimir">DYNAMIC CASIMIR</button>
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-cyan);">INTERACTIVE 3D MESH</span>
+          </div>
+
+          <div class="canvas-wrapper">
+            <canvas id="sim-canvas"></canvas>
+          </div>
+
+          <div class="viewport-footer">
+            <span>SPACETIME CURVATURE MESH (3+1 ADM PROJECTION)</span>
+            <span>EULERIAN OBSERVER FRAME</span>
+          </div>
+        </div>
+
+        <!-- Controls Sidebar -->
+        <div class="sim-controls-panel">
+          <!-- Alcubierre Controls -->
+          <div id="controls-alcubierre" class="glass-card">
+            <div class="card-title">
+              <span>Alcubierre Parameters</span>
+              <span class="card-badge">EXOTIC METRIC</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Apparent Velocity (v_s / c):</span>
+                <span id="val-vs" class="control-val">2.0 c</span>
+              </div>
+              <input type="range" id="slider-vs" min="0.1" max="10.0" step="0.1" value="2.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Bubble Radius (R):</span>
+                <span id="val-r" class="control-val">45 m</span>
+              </div>
+              <input type="range" id="slider-r" min="15" max="100" step="1" value="45">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Wall Thickness Parameter (σ):</span>
+                <span id="val-sigma" class="control-val">0.08</span>
+              </div>
+              <input type="range" id="slider-sigma" min="0.02" max="0.30" step="0.01" value="0.08">
+            </div>
+
+            <div class="metric-stat-box">
+              <div class="stat-row">
+                <span class="stat-label">Expansion Ahead (θ < 0):</span>
+                <span class="stat-value success">Spacetime Compression</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Expansion Behind (θ > 0):</span>
+                <span class="stat-value danger">Spacetime Dilation</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Negative Mass Equivalent:</span>
+                <span id="stat-warp-mass" class="stat-value danger">-3.12 × 10²⁵ kg</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Integrated Energy:</span>
+                <span id="stat-warp-energy" class="stat-value warning">-2.80 × 10⁴² J</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bondi Dipole Controls -->
+          <div id="controls-bondi" class="glass-card" style="display: none;">
+            <div class="card-title">
+              <span>Bondi Dipole Parameters</span>
+              <span class="card-badge">NEGATIVE MASS</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Positive Mass (+m₁):</span>
+                <span id="val-m1" class="control-val">+1.0 kg</span>
+              </div>
+              <input type="range" id="slider-m1" min="0.2" max="5.0" step="0.1" value="1.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Negative Mass (-m₂):</span>
+                <span id="val-m2" class="control-val">-1.0 kg</span>
+              </div>
+              <input type="range" id="slider-m2" min="0.2" max="5.0" step="0.1" value="1.0">
+            </div>
+
+            <button id="btn-reset-bondi" class="btn-hud" style="width: 100%; justify-content: center; margin-top: 8px;">
+              RESET DIPOLE TRAJECTORY
+            </button>
+
+            <div class="metric-stat-box" style="margin-top: 14px;">
+              <div class="stat-row">
+                <span class="stat-label">Net Momentum (Σ P):</span>
+                <span class="stat-value success">0.000 kg·m/s (Conserved)</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Net Kinetic Energy:</span>
+                <span class="stat-value warning">0.000 J (Zero Sum)</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Vacuum Stability:</span>
+                <span class="stat-value danger">VIOLATED (Infinite decay)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GEM Controls -->
+          <div id="controls-gem" class="glass-card" style="display: none;">
+            <div class="card-title">
+              <span>Gravitomagnetic Setup</span>
+              <span class="card-badge">LINEARIZED GR</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Core Angular Momentum (J):</span>
+                <span id="val-gem-j" class="control-val">50 × 10²⁵ J·s</span>
+              </div>
+              <input type="range" id="slider-gem-j" min="5" max="100" step="1" value="50">
+            </div>
+
+            <div class="metric-stat-box">
+              <div class="stat-row">
+                <span class="stat-label">Gravitomagnetic Field (B_g):</span>
+                <span id="stat-gem-bg" class="stat-value">1.48 × 10⁻¹⁷ s⁻¹</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Req. Density for 1g Cancel:</span>
+                <span id="stat-gem-density" class="stat-value danger">4.41 × 10²⁶ J·s/m³</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Physical Validity:</span>
+                <span class="stat-value success">VALID GR MECHANISM</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Casimir Controls -->
+          <div id="controls-casimir" class="glass-card" style="display: none;">
+            <div class="card-title">
+              <span>Casimir Cavity Setup</span>
+              <span class="card-badge">QFT ZERO-POINT</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Plate Separation (d):</span>
+                <span id="val-casimir-d" class="control-val">35 nm</span>
+              </div>
+              <input type="range" id="slider-casimir-d" min="5" max="80" step="1" value="35">
+            </div>
+
+            <div class="metric-stat-box">
+              <div class="stat-row">
+                <span class="stat-label">Attractive Pressure:</span>
+                <span id="stat-casimir-pressure" class="stat-value">8.67 × 10² Pa</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Ford-Roman Lifetime (τ₀):</span>
+                <span id="stat-casimir-tau" class="stat-value warning">1.24 × 10⁻¹⁸ s</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Macro-Thrust Viability:</span>
+                <span class="stat-value danger">ZERO NET PROPULSION</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 2: ENERGY CONDITIONS & TENSOR DIAGNOSTICS -->
+    <!-- ==================================================================== -->
+    <section id="tab-diagnostics" class="tab-content">
+      <div class="diagnostics-grid">
+        <!-- Stress-Energy Tensor Builder -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>Stress-Energy Tensor Input (T_μν)</span>
+            <span class="card-badge">DIAGONAL IDEAL FLUID</span>
+          </div>
+          <p class="text-p">
+            Evaluate arbitrary stress-energy configurations against General Relativistic energy conditions and Semiclassical Quantum Field Theory inequalities.
+          </p>
+
+          <div class="tensor-matrix-display">
+            <div class="tensor-row">
+              <div class="tensor-cell"><b>T₀₀ = ρ</b> (Energy Density)</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+            </div>
+            <div class="tensor-row">
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell"><b>T₁₁ = p_x</b> (Pressure X)</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+            </div>
+            <div class="tensor-row">
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell"><b>T₂₂ = p_y</b> (Pressure Y)</div>
+              <div class="tensor-cell">0</div>
+            </div>
+            <div class="tensor-row">
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell">0</div>
+              <div class="tensor-cell"><b>T₃₃ = p_z</b> (Pressure Z)</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <label class="control-label">Energy Density ρ (J/m³):</label>
+              <input type="number" id="diag-rho" class="terminal-input" style="width: 100%; border: 1px solid var(--border-subtle); padding: 8px; border-radius: var(--radius-sm);" value="-1000000">
+            </div>
+            <div>
+              <label class="control-label">Pressure p_x (Pa):</label>
+              <input type="number" id="diag-px" class="terminal-input" style="width: 100%; border: 1px solid var(--border-subtle); padding: 8px; border-radius: var(--radius-sm);" value="500000">
+            </div>
+            <div>
+              <label class="control-label">Pressure p_y (Pa):</label>
+              <input type="number" id="diag-py" class="terminal-input" style="width: 100%; border: 1px solid var(--border-subtle); padding: 8px; border-radius: var(--radius-sm);" value="500000">
+            </div>
+            <div>
+              <label class="control-label">Pressure p_z (Pa):</label>
+              <input type="number" id="diag-pz" class="terminal-input" style="width: 100%; border: 1px solid var(--border-subtle); padding: 8px; border-radius: var(--radius-sm);" value="500000">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+            <button id="preset-vacuum" class="btn-hud">Minkowski Vacuum</button>
+            <button id="preset-dust" class="btn-hud">Ordinary Dust (ρ > 0)</button>
+            <button id="preset-warp" class="btn-hud danger">Alcubierre Wall (ρ < 0)</button>
+            <button id="preset-casimir" class="btn-hud warning">Casimir Gap</button>
+          </div>
+
+          <button id="btn-run-diag" class="btn-hud" style="width: 100%; justify-content: center; background: rgba(0, 240, 255, 0.2); border-color: var(--color-cyan);">
+            RUN TENSOR VALIDATION CHECK
+          </button>
+        </div>
+
+        <!-- Diagnostic Output Cards -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>Energy Condition Status</span>
+            <span class="card-badge">SEMICLASSICAL VERDICT</span>
+          </div>
+
+          <div class="condition-cards">
+            <!-- NEC -->
+            <div id="card-nec" class="condition-card violated">
+              <div>
+                <div class="condition-title">
+                  <span>Null Energy Condition (NEC)</span>
+                </div>
+                <div class="condition-formula">T_μν k^μ k^ν ≥ 0 &nbsp;⟹&nbsp; ρ + p_i ≥ 0</div>
+                <div id="details-nec" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Evaluating...</div>
+              </div>
+              <span id="tag-nec" class="status-tag violated">VIOLATED</span>
+            </div>
+
+            <!-- WEC -->
+            <div id="card-wec" class="condition-card violated">
+              <div>
+                <div class="condition-title">
+                  <span>Weak Energy Condition (WEC)</span>
+                </div>
+                <div class="condition-formula">T_μν u^μ u^ν ≥ 0 &nbsp;⟹&nbsp; ρ ≥ 0 and ρ + p_i ≥ 0</div>
+                <div id="details-wec" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Evaluating...</div>
+              </div>
+              <span id="tag-wec" class="status-tag violated">VIOLATED</span>
+            </div>
+
+            <!-- SEC -->
+            <div id="card-sec" class="condition-card violated">
+              <div>
+                <div class="condition-title">
+                  <span>Strong Energy Condition (SEC)</span>
+                </div>
+                <div class="condition-formula">(T_μν - ½ T g_μν) u^μ u^ν ≥ 0 &nbsp;⟹&nbsp; ρ + Σ p_i ≥ 0</div>
+                <div id="details-sec" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Evaluating...</div>
+              </div>
+              <span id="tag-sec" class="status-tag violated">VIOLATED</span>
+            </div>
+
+            <!-- DEC -->
+            <div id="card-dec" class="condition-card violated">
+              <div>
+                <div class="condition-title">
+                  <span>Dominant Energy Condition (DEC)</span>
+                </div>
+                <div class="condition-formula">Causal Energy Flux &nbsp;⟹&nbsp; ρ ≥ |p_i|</div>
+                <div id="details-dec" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Evaluating...</div>
+              </div>
+              <span id="tag-dec" class="status-tag violated">VIOLATED</span>
+            </div>
+          </div>
+
+          <div class="highlight-box danger" style="margin-top: 16px;">
+            <b>QFT BOUND:</b> Ford-Roman Quantum Energy Inequalities prohibit macroscopic negative energy densities from persisting over timescales Δt > ħ / (|ρ_neg| c³).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 3: THEORETICAL FOUNDATIONS & FORMULATIONS -->
+    <!-- ==================================================================== -->
+    <section id="tab-dossier" class="tab-content">
+      <div class="dossier-grid">
+        <!-- Exact GR & Field Equations -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>1. Einstein Field Equations &amp; Curvature</span>
+            <span class="card-badge">GEOMETRIC FOUNDATIONS</span>
+          </div>
+          <p class="text-p">
+            In standard General Relativity, gravitational interactions are governed by the curvature of the 4D pseudo-Riemannian metric tensor:
+          </p>
+          <div class="formula-block">
+            G_μν + Λ g_μν = (8πG / c⁴) T_μν<br><br>
+            where G_μν ≡ R_μν - ½ R g_μν<br>
+            R_μν = ∂_λ Γ^λ_μν - ∂_ν Γ^λ_μλ + Γ^λ_λσ Γ^σ_μν - Γ^λ_νσ Γ^σ_μλ
+          </div>
+          <p class="text-p">
+            Gravitational repulsion or metric-driven translation without local acceleration requires engineering the spatial components of the metric connection Γ^λ_μν rather than applying Newtonian forces.
+          </p>
+        </div>
+
+        <!-- Alcubierre ADM Metric -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>2. Alcubierre Spacetime Metric (ADM 3+1)</span>
+            <span class="card-badge">METRIC EXPANSION</span>
+          </div>
+          <p class="text-p">
+            The Alcubierre metric constructs a localized warp bubble that compresses space ahead and expands space behind:
+          </p>
+          <div class="formula-block">
+            ds² = -c² dt² + [dx - v_s(t) f(r_s) dt]² + dy² + dz²<br><br>
+            θ = ∇_μ n^μ = -v_s (x/r_s) (df/dr_s)<br>
+            ρ_eff = - (c² / 32πG) · v_s² · (y²+z²)/r_s² · (df/dr_s)²
+          </div>
+          <div class="highlight-box danger">
+            <b>CRITICAL VIOLATION:</b> Because ρ_eff ≤ 0 along the bubble wall, the metric strictly violates the Null Energy Condition (NEC).
+          </div>
+        </div>
+
+        <!-- Gravitoelectromagnetism (GEM) -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>3. Gravitoelectromagnetism (Linearized GR)</span>
+            <span class="card-badge">MAINSTREAM PHYSICS</span>
+          </div>
+          <p class="text-p">
+            In the weak-field, slow-motion limit (g_μν = η_μν + h_μν), Einstein's field equations decouple into Maxwell-like vector equations:
+          </p>
+          <div class="formula-block">
+            ∇ · E_g = -4πG ρ_m<br>
+            ∇ · B_g = 0<br>
+            ∇ × E_g = - ∂B_g / ∂t<br>
+            ∇ × B_g = - (16πG / c²) j_m + (1/c) ∂E_g / ∂t
+          </div>
+          <div class="highlight-box">
+            <b>VALIDITY:</b> GEM is experimentally confirmed (Gravity Probe B, LAGEOS). However, generating 1g of counter-acceleration requires stellar angular momentum densities (~10²⁵ J·s/m³).
+          </div>
+        </div>
+
+        <!-- Quantum Energy Inequalities -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span>4. Ford-Roman Quantum Inequalities</span>
+            <span class="card-badge">QUANTUM CONSTRAINTS</span>
+          </div>
+          <p class="text-p">
+            Negative expectation values of the stress-energy tensor ⟨T₀₀⟩ are bounded by semiclassical quantum inequalities:
+          </p>
+          <div class="formula-block">
+            (τ₀ / π) ∫_{-∞}^{+∞} [ ⟨T₀₀(t)⟩ / (t² + τ₀²) ] dt ≥ - (3ħ) / (32π² c³ τ₀⁴)<br><br>
+            Spatial Bound: Δx ≤ c · τ₀
+          </div>
+          <p class="text-p">
+            Any attempt to sustain macroscopic negative energy density causes quantum backreaction, resulting in intense high-entropy particle creation and horizon instability.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 4: SYNTHESIS MATRIX -->
+    <!-- ==================================================================== -->
+    <section id="tab-matrix" class="tab-content">
+      <div class="glass-card">
+        <div class="card-title">
+          <span>Comparative Propulsion &amp; Gravitational Synthesis Matrix</span>
+          <div style="display: flex; gap: 6px;">
+            <button class="mode-btn matrix-filter-btn active" data-filter="all">ALL</button>
+            <button class="mode-btn matrix-filter-btn" data-filter="gr">VALID GR</button>
+            <button class="mode-btn matrix-filter-btn" data-filter="exotic">EXOTIC</button>
+            <button class="mode-btn matrix-filter-btn" data-filter="disproven">DISPROVEN</button>
+          </div>
+        </div>
+
+        <div class="matrix-wrapper">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Propulsion / Mechanism</th>
+                <th>Physics Paradigm</th>
+                <th>Governing Formulation</th>
+                <th>Energy Conditions</th>
+                <th>Feasibility</th>
+                <th>Energy Requirement</th>
+                <th>TRL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- GEM -->
+              <tr class="matrix-row cat-gr">
+                <td><b>Gravitomagnetic Lense-Thirring</b></td>
+                <td><span class="card-badge" style="color: var(--color-emerald); border-color: var(--color-emerald);">Valid GR</span></td>
+                <td><code>∇ × B_g = -(16πG/c²) j_m</code></td>
+                <td><span class="status-tag satisfied">Satisfies All</span></td>
+                <td><span class="score-pill score-mid">3/10</span></td>
+                <td>J/V ~ 10²⁵ J·s/m³ (Relativistic Core)</td>
+                <td><b>TRL 1</b></td>
+              </tr>
+              <!-- Alcubierre -->
+              <tr class="matrix-row cat-exotic">
+                <td><b>Alcubierre / Natário Warp Bubble</b></td>
+                <td><span class="card-badge" style="color: var(--color-magenta); border-color: var(--color-magenta);">Exotic Metric</span></td>
+                <td><code>ds² = -c²dt² + (dx - v_sf dt)² + dy² + dz²</code></td>
+                <td><span class="status-tag violated">Violates NEC/WEC</span></td>
+                <td><span class="score-pill score-low">1/10</span></td>
+                <td>M_warp ~ -10²⁵ to -10² kg (Exotic Matter)</td>
+                <td><b>TRL 1</b></td>
+              </tr>
+              <!-- Bondi -->
+              <tr class="matrix-row cat-exotic">
+                <td><b>Bondi Negative Mass Dipole</b></td>
+                <td><span class="card-badge" style="color: var(--color-magenta); border-color: var(--color-magenta);">Speculative GR</span></td>
+                <td><code>m_i = m_p = m_a = -m < 0</code></td>
+                <td><span class="status-tag violated">Violates DEC/WEC</span></td>
+                <td><span class="score-pill score-low">1/10</span></td>
+                <td>Sustained negative active mass</td>
+                <td><b>TRL 0</b></td>
+              </tr>
+              <!-- Casimir -->
+              <tr class="matrix-row cat-gr">
+                <td><b>Dynamic Casimir Quantum Vacuum</b></td>
+                <td><span class="card-badge" style="color: var(--color-cyan); border-color: var(--color-cyan);">Quantum Field Theory</span></td>
+                <td><code>T₀₀ = -(π²ħc)/(720 d⁴)</code></td>
+                <td><span class="status-tag violated">Bounded by QEI</span></td>
+                <td><span class="score-pill score-mid">2/10</span></td>
+                <td>Nanogap dielectric cavities</td>
+                <td><b>TRL 2</b></td>
+              </tr>
+              <!-- Majorana -->
+              <tr class="matrix-row cat-disproven">
+                <td><b>Majorana Gravitational Shielding</b></td>
+                <td><span class="card-badge" style="color: var(--color-dim); border-color: var(--text-dim);">Falsified</span></td>
+                <td><code>F = G₀(1 - h∫ρ dr) m₁m₂/r²</code></td>
+                <td><span class="status-tag violated">Violates SEP</span></td>
+                <td><span class="score-pill score-low">0/10</span></td>
+                <td>Excluded by experiment (h ≤ 10⁻¹⁶)</td>
+                <td><b>TRL 0</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 5: MASS-ENERGY SCALER & CALCULATOR -->
+    <!-- ==================================================================== -->
+    <section id="tab-calculator" class="tab-content">
+      <div class="calc-grid">
+        <div class="glass-card">
+          <div class="card-title">
+            <span>Warp Envelope Parameter Scaler</span>
+            <span class="card-badge">EFE INVERSE SOLVER</span>
+          </div>
+          <p class="text-p">
+            Calculate the exact mass-energy required to maintain an Alcubierre warp bubble under classical and Van Den Broeck topological compression geometries.
+          </p>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Target Superluminal Velocity:</span>
+              <span id="calc-vs-val" class="control-val">5.0 c</span>
+            </div>
+            <input type="range" id="calc-vs-slider" min="1" max="50" step="1" value="5" oninput="document.getElementById('calc-vs-val').textContent = this.value + ' c'; updateGlobalScaler();">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Payload Cavity Radius (R):</span>
+              <span id="calc-r-val" class="control-val">100 m</span>
+            </div>
+            <input type="range" id="calc-r-slider" min="10" max="500" step="10" value="100" oninput="document.getElementById('calc-r-val').textContent = this.value + ' m'; updateGlobalScaler();">
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Wall Thickness Factor (σ):</span>
+              <span id="calc-sig-val" class="control-val">0.05</span>
+            </div>
+            <input type="range" id="calc-sig-slider" min="0.01" max="0.2" step="0.01" value="0.05" oninput="document.getElementById('calc-sig-val').textContent = this.value; updateGlobalScaler();">
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-title">
+            <span>Required Mass-Energy Scaling</span>
+            <span class="card-badge danger">NEGATIVE ENERGY REQUIRED</span>
+          </div>
+
+          <div class="calc-result-box">
+            <div class="stat-desc">INTEGRATED EXOTIC MASS EQUIVALENT (M_warp):</div>
+            <div id="calc-total-mass" class="big-stat">-1.54 × 10²⁸ kg</div>
+            <div id="calc-jupiter-equiv" style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--color-amber);">
+              ≈ 8.12 Jupiter Masses (-8.12 M_J)
+            </div>
+          </div>
+
+          <div class="metric-stat-box" style="margin-top: 16px;">
+            <div class="stat-row">
+              <span class="stat-label">Total Energy Equivalent (E = Mc²):</span>
+              <span id="calc-total-energy" class="stat-value danger">-1.38 × 10⁴⁵ Joules</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Bubble Interior Proper Accel:</span>
+              <span class="stat-value success">0.000 m/s² (Zero g-forces)</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Quantum Decay Lifetime (τ₀):</span>
+              <span id="calc-decay-tau" class="stat-value warning">&lt; 10⁻³⁵ seconds</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function updateGlobalScaler() {
+          const vs = parseFloat(document.getElementById('calc-vs-slider').value);
+          const R = parseFloat(document.getElementById('calc-r-slider').value);
+          const sigma = parseFloat(document.getElementById('calc-sig-slider').value);
+          
+          const G = 6.67430e-11;
+          const c = 299792458;
+          const M_jupiter = 1.898e27;
+
+          const vs_m_s = vs * c;
+          const mass_kg = -(1 / 12) * (Math.pow(vs_m_s, 2) / G) * Math.pow(R, 2) * sigma;
+          const energy_j = mass_kg * Math.pow(c, 2);
+          const jup = Math.abs(mass_kg) / M_jupiter;
+
+          document.getElementById('calc-total-mass').textContent = mass_kg.toExponential(2) + ' kg';
+          document.getElementById('calc-jupiter-equiv').textContent = '≈ ' + jup.toFixed(2) + ' Jupiter Masses (-' + jup.toFixed(2) + ' M_J)';
+          document.getElementById('calc-total-energy').textContent = energy_j.toExponential(2) + ' Joules';
+        }
+      </script>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 6: AI RESEARCH TERMINAL -->
+    <!-- ==================================================================== -->
+    <section id="tab-terminal" class="tab-content">
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="t-dot red"></div>
+            <div class="t-dot yellow"></div>
+            <div class="t-dot green"></div>
+          </div>
+          <span>ANTIGRAV_RESEARCH_AI // INTERACTIVE CLI v4.2</span>
+          <span>AIR-GAPPED</span>
+        </div>
+
+        <div id="terminal-body" class="terminal-body">
+          <div class="terminal-line t-sys">
+            ===============================================================================<br>
+            &nbsp;&nbsp;ANTIGRAV RESEARCH AI // THEORETICAL PHYSICS &amp; METRIC ENGINE<br>
+            &nbsp;&nbsp;CLEARANCE: RESEARCH_LEAD (LEVEL-5) | STATUS: READY<br>
+            ===============================================================================<br>
+            Type '<b>help</b>' to view available tensor diagnostics and analysis routines.
+          </div>
+        </div>
+
+        <div class="terminal-input-row">
+          <span class="t-prompt">RESEARCH_AI &gt;</span>
+          <input type="text" id="terminal-input" class="terminal-input" placeholder="Enter command (e.g. eval alcubierre, tensor -1e10 0 0 0, help)..." autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script src="physics-engine.js"></script>
+  <script src="visualizer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
