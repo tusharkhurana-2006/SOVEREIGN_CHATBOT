@@ -1,7 +1,7 @@
 """
 ================================================================================
-SOVEREIGN CREDENTIAL & COAL MINES PERSONNEL VAULT MANAGER
-Manages Multi-Tier Sovereign Credential Repositories and Coal Mine Personnel Datasets
+SOVEREIGN VAULT & ENTERPRISE KNOWLEDGE BASE MANAGER
+Multi-Tier Sovereign Knowledge Repository with Dynamic Tabular Ingestion
 ================================================================================
 """
 
@@ -11,287 +11,265 @@ import os
 from typing import List, Dict, Any, Optional
 
 CLEARANCE_LEVELS = {
-    1: {"name": "LEVEL 1: GENERAL MINER / INTERN", "badge": "LEVEL-1", "color": "#00ff9d"},
-    2: {"name": "LEVEL 2: CERTIFIED OPERATOR / DRILLER", "badge": "LEVEL-2", "color": "#00f0ff"},
-    3: {"name": "LEVEL 3: OVERMAN / SAFETY OFFICER", "badge": "LEVEL-3", "color": "#ffb800"},
-    4: {"name": "LEVEL 4: MINE MANAGER / CHIEF AGENT", "badge": "LEVEL-4", "color": "#ff0055"}
+    1: {"name": "LEVEL 1: GENERAL / PUBLIC", "badge": "LEVEL-1", "color": "#00ff9d"},
+    2: {"name": "LEVEL 2: INTERNAL / DEVELOPER", "badge": "LEVEL-2", "color": "#00f0ff"},
+    3: {"name": "LEVEL 3: CONFIDENTIAL / OPERATIONS", "badge": "LEVEL-3", "color": "#ffb800"},
+    4: {"name": "LEVEL 4: RESTRICTED / ADMIN (ROOT)", "badge": "LEVEL-4", "color": "#ff0055"}
 }
 
-DEFAULT_CREDENTIAL_KNOWLEDGE_BASE = [
+DEFAULT_KNOWLEDGE_BASE = [
     # =========================================================================
-    # COAL MINES WORKERS REGISTRY & PERSONNEL DATASET
+    # LEVEL 1: GENERAL / PUBLIC
     # =========================================================================
     {
-        "doc_id": "MINE-WRK-001",
-        "title": "Personnel Record: Rajesh Kumar Sharma — Chief Mine Manager (First Class Certificate)",
-        "category": "Coal Mine Management",
-        "clearance_level": 4,
-        "metadata": {
-            "worker_id": "MINE-MGR-1001",
-            "job_title": "Chief Mine Manager & Statutory Agent",
-            "mine_division": "Deep Seam Shaft #4 (Underground)",
-            "shift": "General Shift (08:00 - 17:00)",
-            "statutory_cert": "DGMS First Class Mine Manager Certificate #CC-98214"
-        },
-        "content": """# Statutory Personnel Record: Chief Mine Manager
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-MGR-1001`
-- **Full Name:** Rajesh Kumar Sharma
-- **Job Title:** Chief Mine Manager & Statutory Agent
-- **Department:** Mine Operations & Statutory Compliance
-- **Assigned Division:** Deep Seam Shaft #4 & Main Incline Portal
-- **DGMS Statutory Certification:** First Class Manager's Certificate of Competency (Coal) #CC-98214
-- **Date of Joining:** 2014-03-15 | **Experience:** 18 Years
-
-### Critical Operational Access & Master Credentials
-- **Central Mine Control Radio Call-Sign:** `COMMAND-LEADER-01` (Freq: `156.800 MHz`)
-- **Main Winding Engine Master Key Code:** `WIND-MSTR-9944-ALPHA`
-- **Explosives Magazine Master Vault Token:** `s.mag_root_token_shaft4_2026_99812`
-- **Emergency Rescue Protocol Clearance:** Level 4 (Full Incident Command Authority)
-- **Direct Emergency Phone:** `+91-98765-01001`"""
-    },
-    {
-        "doc_id": "MINE-WRK-002",
-        "title": "Personnel Record: Vikramaditya Singh — Blasting & Explosives Engineer",
-        "category": "Explosives & Blasting",
-        "clearance_level": 3,
-        "metadata": {
-            "worker_id": "MINE-EXP-2044",
-            "job_title": "Blasting & Explosives Engineer",
-            "mine_division": "Pit #3 Coal Seam (Drift Section)",
-            "shift": "Shift-A (06:00 - 14:00)",
-            "statutory_cert": "DGMS Overman & Shotfirer Certificate #SF-55410"
-        },
-        "content": """# Statutory Personnel Record: Blasting & Explosives Engineer
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-EXP-2044`
-- **Full Name:** Vikramaditya Singh
-- **Job Title:** Blasting & Explosives Engineer / Lead Shotfirer
-- **Department:** Drilling & Blasting Operations
-- **Assigned Division:** Pit #3 Coal Seam (Drift Section)
-- **DGMS Statutory Certification:** Shotfirer Certificate #SF-55410 | Gas Testing Certified
-- **Date of Joining:** 2018-07-22 | **Experience:** 9 Years
-
-### Explosives Locker Access & Authorization
-- **Designated Magazine Locker:** Underground Sub-Magazine Locker #B-12
-- **Daily Explosives Allocation Limit:** 250 kg Slurry Explosives / 80 Electric Detonators
-- **Magazine Locker Passcode:** `Passcode: EXPL-BLAST-7729!_ShotfireSecured`
-- **Emergency Detonator Circuit Test Key:** `DET-KEY-8831-OMEGA`
-- **Emergency Radio Call-Sign:** `BLAST-CONTROL-4` (Freq: `158.450 MHz`)"""
-    },
-    {
-        "doc_id": "MINE-WRK-003",
-        "title": "Personnel Record: Ananya Deshmukh — Underground Ventilation & Gas Safety Officer",
-        "category": "Ventilation & Gas Safety",
-        "clearance_level": 3,
-        "metadata": {
-            "worker_id": "MINE-SAF-3012",
-            "job_title": "Underground Ventilation Officer & Gas Analyst",
-            "mine_division": "North Ventilation Shaft & Return Airway #2",
-            "shift": "Shift-B (14:00 - 22:00)",
-            "statutory_cert": "DGMS Gas Testing & Ventilation Certificate #GT-99214"
-        },
-        "content": """# Statutory Personnel Record: Ventilation Officer & Gas Analyst
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-SAF-3012`
-- **Full Name:** Ananya Deshmukh
-- **Job Title:** Underground Ventilation Officer & Gas Analyst
-- **Department:** Safety, Ventilation & Environmental Monitoring
-- **Assigned Division:** North Ventilation Shaft & Return Airway #2
-- **DGMS Statutory Certification:** DGMS Gas Testing Certificate #GT-99214 | Overman License #OM-44120
-- **Date of Joining:** 2019-11-10 | **Experience:** 7 Years
-
-### Gas Monitoring Sensor & Telemetry Credentials
-- **Methane (CH4) Sensor Calibration Node:** `methane-telemetry-shaft2.internal.mine.ai`
-- **Carbon Monoxide (CO) Multi-Gas Telemetry Token:** `Token: gas_telemetry_tok_4412_methane_ch4_safe`
-- **Main Fan Telemetry Dashboard URI:** `http://ventilation-fan.internal.mine.ai:8080/monitor`
-- **Self-Contained Self-Rescuer (SCSR) Station #4 Locker Key:** `SCSR-LOCK-4412`"""
-    },
-    {
-        "doc_id": "MINE-WRK-004",
-        "title": "Personnel Record: Harpreet Singh Sandhu — Continuous Miner Operator",
-        "category": "Heavy Equipment Operations",
-        "clearance_level": 2,
-        "metadata": {
-            "worker_id": "MINE-OPS-4108",
-            "job_title": "Continuous Miner Operator (Heavy Machinery)",
-            "mine_division": "Panel-C Longwall Face (Underground)",
-            "shift": "Shift-A (06:00 - 14:00)",
-            "statutory_cert": "Heavy Earth Moving Machinery (HEMM) Operator License #HM-88120"
-        },
-        "content": """# Statutory Personnel Record: Continuous Miner Operator
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-OPS-4108`
-- **Full Name:** Harpreet Singh Sandhu
-- **Job Title:** Continuous Miner Operator (Heavy Machinery)
-- **Department:** Mechanized Coal Extraction & Heading Development
-- **Assigned Division:** Panel-C Longwall Face (Underground)
-- **Assigned Machinery:** Joy Global Continuous Miner #CM-04 (1100V Dual-Drum Shearer)
-- **Certification:** HEMM Heavy Equipment Operator #HM-88120 | Vocational Training Certified
-- **Date of Joining:** 2020-02-14 | **Experience:** 6 Years
-
-### Machinery Operation & Safe Codes
-- **Continuous Miner Machine ID:** `CM-JOY-04-NORTH`
-- **Operator Ignition Badge Code:** `Badge: OP-CM04-KEY-9912`
-- **Shuttle Car Link Frequency:** Channel 4 (`154.200 MHz`)
-- **Emergency Hydraulic Shutoff Protocol:** Pull Red Safety Cable at Operator Console Section B"""
-    },
-    {
-        "doc_id": "MINE-WRK-005",
-        "title": "Personnel Record: Mohammad Imran Khan — Dragline & Shovel Operator",
-        "category": "Opencast Heavy Machinery",
-        "clearance_level": 2,
-        "metadata": {
-            "worker_id": "MINE-OPS-4219",
-            "job_title": "Dragline & Heavy Shovel Operator",
-            "mine_division": "Opencast Zone Bravo (Overburden Excavation)",
-            "shift": "Shift-C (22:00 - 06:00 Night)",
-            "statutory_cert": "HEMM Class-1 Dragline Certification #DL-77312"
-        },
-        "content": """# Statutory Personnel Record: Dragline & Shovel Operator
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-OPS-4219`
-- **Full Name:** Mohammad Imran Khan
-- **Job Title:** Dragline & Heavy Shovel Operator
-- **Department:** Opencast Overburden Removal Division
-- **Assigned Division:** Opencast Zone Bravo (Highwall Section)
-- **Assigned Machinery:** 24/96 Walking Dragline (Bucket Capacity: 24 m³)
-- **Certification:** HEMM Class-1 Dragline Operator #DL-77312
-- **Date of Joining:** 2017-05-01 | **Experience:** 9 Years
-
-### Operational Access
-- **Dragline Machine Call-Sign:** `DRAGLINE-BRAVO-01`
-- **Walkie-Talkie Channel:** Channel 7 (`157.925 MHz`)
-- **Highwall Geotechnical Radar Monitor:** `http://georadar-zoneb.internal.mine.ai:5000`"""
-    },
-    {
-        "doc_id": "MINE-WRK-006",
-        "title": "Personnel Record: Sunita Soren — Shift Overman & Roof Bolting Supervisor",
-        "category": "Strata Control & Supervision",
-        "clearance_level": 3,
-        "metadata": {
-            "worker_id": "MINE-SUP-5021",
-            "job_title": "Shift Overman & Strata Control Supervisor",
-            "mine_division": "East Dip Section (Depillaring District)",
-            "shift": "Shift-A (06:00 - 14:00)",
-            "statutory_cert": "DGMS Overman Certificate of Competency #OM-77329"
-        },
-        "content": """# Statutory Personnel Record: Shift Overman & Strata Control
-
-### Worker Identity & Designation
-- **Worker ID:** `MINE-SUP-5021`
-- **Full Name:** Sunita Soren
-- **Job Title:** Shift Overman & Strata Control Supervisor
-- **Department:** Underground Production & Strata Control
-- **Assigned Division:** East Dip Section (Depillaring District)
-- **DGMS Statutory Certification:** Overman Certificate of Competency #OM-77329 | First Aid Certified
-- **Date of Joining:** 2016-09-18 | **Experience:** 10 Years
-
-### Statutory Supervision & Strata Control Credentials
-- **Strata Load Cell Telemetry Portal:** `http://strata-eastdip.internal.mine.ai`
-- **Hydraulic Prop Setting Pressure Threshold:** Minimum `250 bar` (Resin Grout Roof Bolts)
-- **Overman Logbook Digital Signature Key:** `OM-SIGN-5021-SOREN`
-- **Emergency Depillaring Alarm Broadcast Code:** `Passcode: ALARM-DEPILLAR-8812!_EvacuateZone`"""
-    },
-    {
-        "doc_id": "MINE-WRK-007",
-        "title": "Personnel Record: Rameshwar Prasad Murmu — Coal Face Driller & Roof Bolter",
-        "category": "Face Operations",
+        "doc_id": "DOC-ARCH-001",
+        "title": "Enterprise Cloud Architecture, DNS Registry & Service Ports",
+        "category": "Architecture",
         "clearance_level": 1,
         "metadata": {
-            "worker_id": "MINE-DRL-6110",
-            "job_title": "Coal Face Driller & Roof Support Technician",
-            "mine_division": "Pit #3 Coal Seam (Heading Section)",
-            "shift": "Shift-B (14:00 - 22:00)",
-            "statutory_cert": "Vocational Coal Mining Training Certificate #VTC-2021-99"
+            "environment": "all",
+            "owner": "infrastructure-team",
+            "tags": ["dns", "architecture", "endpoints", "ports"]
         },
-        "content": """# Statutory Personnel Record: Coal Face Driller
+        "content": """# Enterprise Cloud Architecture & Service Endpoints
 
-### Worker Identity & Designation
-- **Worker ID:** `MINE-DRL-6110`
-- **Full Name:** Rameshwar Prasad Murmu
-- **Job Title:** Coal Face Driller & Roof Support Technician
-- **Department:** Face Heading & Roof Support Installation
-- **Assigned Division:** Pit #3 Coal Seam (Heading Section)
-- **Training Certification:** VTC Certified Miner #VTC-2021-99
-- **Date of Joining:** 2021-08-12 | **Experience:** 5 Years
+The core infrastructure operates across distributed multi-region cloud clusters.
 
-### Assigned Equipment & Gear
-- **Pneumatic Rotary Drill Machine:** `PNEUM-DRL-08`
-- **Cap Lamp & Biometric Smart Helmet ID:** `HELMET-TAG-6110`
-- **Assigned Gas Mask / SCSR Model:** Fenzy Biocell SCSR (60 min oxygen supply)
-- **Shift Reporting Station:** Pit #3 Substation Attendance Room"""
+### Public & Staging Service Endpoints
+- **Staging Web App Gateway:** `https://staging.internal.enterprise.org` (Port: 443)
+- **Developer API Gateway:** `https://api-dev.enterprise.org/v1`
+- **Internal Monitoring Dashboard:** `https://grafana.internal.enterprise.org:3000`
+- **Identity Provider (SSO OAuth2):** `https://auth.internal.enterprise.org/oauth2`
+- **Public CDN Origin:** `https://assets.enterprise.org/dist`
+
+### Microservice Port Allocations
+- Authentication & SSO Service: Port `8081`
+- User Profile & Directory Service: Port `8082`
+- Payment & Billing Service: Port `8083`
+- Vector Search & Ingestion Service: Port `8084`
+- Audit & Security Logging Service: Port `8085`"""
     },
     {
-        "doc_id": "MINE-WRK-008",
-        "title": "Personnel Record: Tanmay Kulkarni — Electrical Supervisor & Winding Technician",
-        "category": "Electrical & Mechanical",
+        "doc_id": "DOC-DIR-002",
+        "title": "Corporate Personnel & Department Directory",
+        "category": "Organization",
+        "clearance_level": 1,
+        "metadata": {
+            "environment": "corporate",
+            "owner": "people-operations",
+            "tags": ["directory", "personnel", "departments", "roles"]
+        },
+        "content": """# Corporate Personnel & Department Directory
+
+### Key Department Leads & Coordinators
+- **Head of Engineering:** Alex Mercer (alex.mercer@enterprise.org) | Ext: `101`
+- **Lead DevOps Engineer:** Sunita Soren (sunita.soren@enterprise.org) | Ext: `102`
+- **Principal Security Architect:** David Roy (david.roy@enterprise.org) | Ext: `103`
+- **Data Engineering Lead:** Rajesh Sharma (rajesh.sharma@enterprise.org) | Ext: `104`
+- **Product Management Lead:** Ananya Deshmukh (ananya.deshmukh@enterprise.org) | Ext: `105`
+
+### Support & Incident Hotlines
+- General IT Helpdesk: `helpdesk@enterprise.org` | Ext: `500`
+- 24/7 Security Operations Center (SOC): `soc@enterprise.org` | Ext: `911`"""
+    },
+
+    # =========================================================================
+    # LEVEL 2: INTERNAL / DEVELOPER
+    # =========================================================================
+    {
+        "doc_id": "DOC-STG-DB-003",
+        "title": "Staging Database & Cache Cluster Credentials",
+        "category": "Database Credentials",
+        "clearance_level": 2,
+        "metadata": {
+            "environment": "staging",
+            "owner": "data-engineering",
+            "tags": ["postgres", "redis", "database", "staging"]
+        },
+        "content": """# Staging Cluster Database Credentials
+
+Staging databases contain sanitized, anonymized seed records for testing and integration.
+
+### Staging PostgreSQL Connection String
+- **Host:** `postgres-stg.internal.enterprise.org`
+- **Port:** `5432`
+- **Database:** `enterprise_staging_db`
+- **Username:** `stg_app_user`
+- **Password:** `Stg_P@ssw0rd_9824!_Secured`
+- **Full URI:** `postgresql://stg_app_user:Stg_P@ssw0rd_9824!_Secured@postgres-stg.internal.enterprise.org:5432/enterprise_staging_db`
+
+### Staging Redis Cache Cluster
+- **Cluster Endpoint:** `redis-stg.cache.internal.enterprise.org:6379`
+- **Auth Token:** `stg_redis_auth_token_f8a92b3c4d`"""
+    },
+    {
+        "doc_id": "DOC-API-004",
+        "title": "Third-Party Sandbox API Tokens (Stripe, Twilio, SendGrid)",
+        "category": "API Keys",
+        "clearance_level": 2,
+        "metadata": {
+            "environment": "sandbox",
+            "owner": "backend-team",
+            "tags": ["api-keys", "stripe", "twilio", "sendgrid", "sandbox"]
+        },
+        "content": """# Third-Party Integration Sandbox Keys
+
+Use these test keys for integration testing in non-production pipelines.
+
+### Stripe Sandbox (Test Mode)
+- **Publishable Key:** `pk_test_51Mz002ABcdEFG9876543210ZYX`
+- **Secret Key:** `sk_test_51Mz002ABcdEFG9876543210ZYX_TestSecretKey89`
+- **Webhook Secret:** `whsec_test_99887766554433221100aabbcc`
+
+### Twilio Test Account
+- **Account SID:** `AC_test_88f9a2b1c4e67890123456789abcdef0`
+- **Auth Token:** `test_auth_tok_77665544332211aabbcc`
+- **Sandbox Number:** `+15005550006`
+
+### SendGrid Sandbox
+- **API Key:** `SG.test_sandbox_key_998877.aaabbbcccdddeeefff111222333`"""
+    },
+
+    # =========================================================================
+    # LEVEL 3: CONFIDENTIAL / OPERATIONS
+    # =========================================================================
+    {
+        "doc_id": "DOC-PROD-RO-005",
+        "title": "Production Read-Replica DB & Kubernetes Ingress Tokens",
+        "category": "Infrastructure",
         "clearance_level": 3,
         "metadata": {
-            "worker_id": "MINE-ELEC-7033",
-            "job_title": "Senior Electrical Supervisor & Flameproof Apparatus Inspector",
-            "mine_division": "Main Shaft Winding House & Underground Substations",
-            "shift": "General Shift (08:00 - 17:00)",
-            "statutory_cert": "DGMS Electrical Supervisor Certificate (Mining) #ES-33109"
+            "environment": "production",
+            "owner": "devops-team",
+            "tags": ["prod", "replica", "k8s", "read-only"]
         },
-        "content": """# Statutory Personnel Record: Electrical Supervisor
+        "content": """# Production Read-Replica Cluster & K8s Gateway
 
-### Worker Identity & Designation
-- **Worker ID:** `MINE-ELEC-7033`
-- **Full Name:** Tanmay Kulkarni
-- **Job Title:** Senior Electrical Supervisor & Flameproof Apparatus Inspector
-- **Department:** Electrical & Mechanical Engineering
-- **Assigned Division:** Main Shaft Winding House & Underground Substations 1-4
-- **DGMS Statutory Certification:** Electrical Supervisor Certificate (Mines) #ES-33109
-- **Date of Joining:** 2015-10-04 | **Experience:** 11 Years
+Confidential read-only credentials for telemetry engines, reporting, and DevOps analytics.
 
-### High-Voltage Switchgear & Substation Credentials
-- **3.3 kV Underground Transformer Substation Access:** Substation #1, #2, #3
-- **Flameproof (FLP) Switchgear Master Lockout Code:** `FLP-SWITCH-LOCK-7712`
-- **Winding Engine Electrical Trip System URI:** `http://shaft4-winder.internal.mine.ai:9090`
-- **Substation PLC Master Key:** `Passcode: PLC_SUBSTATION_KEY_#33109_VaultFLP`"""
+### Production Read-Replica PostgreSQL (Read-Only)
+- **Host:** `db-prod-ro.internal.enterprise.org`
+- **Port:** `5432`
+- **Database:** `enterprise_production_vault`
+- **Username:** `svc_telemetry_ro`
+- **Password:** `ProdRO_Key_#99812_VaultSecured`
+- **Connection String:** `postgresql://svc_telemetry_ro:ProdRO_Key_#99812_VaultSecured@db-prod-ro.internal.enterprise.org:5432/enterprise_production_vault?sslmode=require`
+
+### Kubernetes EKS Cluster Access Token
+- **Cluster ARN:** `arn:aws:eks:us-east-1:123456789012:cluster/prod-k8s-enterprise`
+- **Service Account:** `system:serviceaccount:monitoring:telemetry-viewer`
+- **Bearer Token:** `Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InByb2Qta2hzLTIwMjYifQ.k8s_confidential_bearer_9988776655`"""
     },
     {
-        "doc_id": "MINE-WRK-009",
-        "title": "Personnel Record: David Anthony Roy — Mine Rescue Team Captain & Paramedic",
-        "category": "Emergency & Mine Rescue",
+        "doc_id": "DOC-RUNBOOK-006",
+        "title": "Enterprise Credential Rotation & Emergency Revocation Runbook",
+        "category": "Security Policy",
+        "clearance_level": 3,
+        "metadata": {
+            "environment": "production",
+            "owner": "security-team",
+            "tags": ["runbook", "rotation", "incident-response", "security"]
+        },
+        "content": """# Enterprise Secret Rotation & Emergency Revocation Protocol
+
+### Standard 90-Day Rotation Schedule
+1. Generate a new high-entropy 256-bit token or asymmetric cryptographic keypair.
+2. Ingest the updated secret into Sovereign Vault under label `next-generation`.
+3. Conduct zero-downtime rolling restart of microservices.
+4. Validate monitoring metrics on Grafana before deprecating legacy tokens.
+
+### Emergency Incident Revocation
+If credential compromise is suspected:
+- Execute: `python -m vault.cli --revoke-token <TOKEN_ID> --broadcast-all`
+- Apply immediate IAM quarantine: `aws iam attach-user-policy --policy-arn arn:aws:iam::aws:policy/AWSDenyAll --user-name <USER>`."""
+    },
+
+    # =========================================================================
+    # LEVEL 4: RESTRICTED / ADMIN (ROOT)
+    # =========================================================================
+    {
+        "doc_id": "DOC-PROD-ROOT-007",
+        "title": "Production Master PostgreSQL Root & High-Privilege Secrets",
+        "category": "Master Credentials",
         "clearance_level": 4,
         "metadata": {
-            "worker_id": "MINE-RSC-8005",
-            "job_title": "Mine Rescue Team Captain & Incident Commander",
-            "mine_division": "Central Mine Rescue Station (CMRS Division)",
-            "shift": "On-Call Emergency Response (24/7 Standby)",
-            "statutory_cert": "DGMS Certified Rescue Brigade Captain #RSC-1004"
+            "environment": "production",
+            "owner": "ciso-office",
+            "tags": ["root", "master-db", "top-secret", "admin"]
         },
-        "content": """# Statutory Personnel Record: Mine Rescue Brigade Captain
+        "content": """# RESTRICTED: Production Master PostgreSQL Root Credentials
 
-### Worker Identity & Designation
-- **Worker ID:** `MINE-RSC-8005`
-- **Full Name:** David Anthony Roy
-- **Job Title:** Mine Rescue Team Captain & Incident Commander
-- **Department:** Central Mine Rescue Station & Disaster Response Unit
-- **Assigned Division:** Central Mine Rescue Station (Underground Emergency Hub)
-- **DGMS Statutory Certification:** Certified Mine Rescue Brigade Leader #RSC-1004
-- **Date of Joining:** 2013-01-20 | **Experience:** 13 Years
+CRITICAL: Direct access restricted to Level-4 Authorized Administrators.
 
-### Emergency Rescue Command & Inundation Protocol
-- **Central Siren Emergency Trigger Passcode:** `Passcode: SIREN_EMERGENCY_TRIGGER_2026_CMRS_99`
-- **Self-Contained Breathing Apparatus (SCBA) BG4 Locker Code:** `BG4-O2-LOCKER-8801`
-- **Emergency Evacuation Chute Door Code:** `CHUTE-EVAC-9941-ROOT`
-- **Emergency Direct Hotline:** `+91-98765-08005` | Call Sign: `RESCUE-ALPHA-LEADER`"""
+### Production Master PostgreSQL (Primary Write Cluster)
+- **Primary Master Host:** `db-prod-primary.internal.enterprise.org`
+- **Port:** `5432`
+- **Master Database:** `enterprise_production_vault`
+- **Root Admin User:** `superadmin_root`
+- **Master Password:** `P4$$w0rd_PROD_ROOT_2026!#998_MasterVaultX`
+- **Primary Master URI:** `postgresql://superadmin_root:P4$$w0rd_PROD_ROOT_2026!#998_MasterVaultX@db-prod-primary.internal.enterprise.org:5432/enterprise_production_vault?sslmode=verify-full`
+
+### Production Master Redis Write Cluster
+- **Master Host:** `redis-prod-master.internal.enterprise.org:6379`
+- **Master Auth Key:** `prod_master_redis_secret_token_9988_a1b2c3d4e5f6`"""
+    },
+    {
+        "doc_id": "DOC-AWS-ROOT-008",
+        "title": "AWS Production Master IAM Root & KMS Master Encryption Key",
+        "category": "Cloud Master Keys",
+        "clearance_level": 4,
+        "metadata": {
+            "environment": "production",
+            "owner": "ciso-office",
+            "tags": ["aws", "kms", "iam", "root-keys"]
+        },
+        "content": """# RESTRICTED: AWS Production Master IAM & KMS Master Key
+
+### AWS Master Production Account
+- **AWS Account ID:** `1234-5678-9012`
+- **Root IAM Access Key ID:** `AKIA_PROD_ROOT_998877665544`
+- **Root Secret Access Key:** `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY2026PROD`
+- **Master KMS Key ID:** `arn:aws:kms:us-east-1:123456789012:key/77f9a8b1-c4d6-4e89-b123-998877665544`
+
+### Production Stripe Live Secret Key
+- **Live Secret Key:** `sk_live_51Mz002ABcdEFG9876543210PROD_LiveSecretKey998877`
+- **Live Webhook Secret:** `whsec_live_99887766554433221100aabbccddeeff99`
+
+### Sovereign Master Zero-Trust Root Token
+- **Vault Token:** `s.root_master_token_2026_sovereign_rag_vault_999`"""
+    },
+    {
+        "doc_id": "DOC-TLS-ROOT-009",
+        "title": "Master Wildcard SSL/TLS Private Key (*.enterprise.org)",
+        "category": "Certificates",
+        "clearance_level": 4,
+        "metadata": {
+            "environment": "production",
+            "owner": "security-officer",
+            "tags": ["ssl", "tls", "private-key", "certificate"]
+        },
+        "content": """# RESTRICTED: Wildcard SSL/TLS Master RSA Private Key
+
+Domain: `*.enterprise.org` | Expiration: `2028-12-31` | Issuer: `Enterprise Root CA`
+
+### Master RSA Private Key
+```
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA0r5z9K7vNq2w8XjL1mQp3tY6uI4vA7B9C1D3E5F7G9H1J3K5
+L7M9N1P3Q5R7S9T1U3V5W7X9Y1Z3A5B7C9D1E3F5G7H9J1K3L5M7N9P1Q3R5S7T1
+U3V5W7X9Y1Z3A5B7C9D1E3F5G7H9J1K3L5M7N9P1Q3R5S7T1U3V5W7X9Y1Z3A5B7
+[...2048-BIT ENCRYPTED MASTER CERTIFICATE KEY...]
+eF6gH7jK9mN1pQ3rS5tU7vW9xY1zA3bC5dE7fG9hJ1kL3mN5pQ7rS9tU1vW3xY5z
+-----END RSA PRIVATE KEY-----
+```"""
     }
 ]
 
 
 class SovereignVaultManager:
     """
-    Manages documents, credentials, and Coal Mines Personnel records.
-    Provides persistence, clearance indexing, and metadata tagging.
+    Manages documents, credentials, and tabular datasets in the Sovereign Knowledge Base.
+    Provides persistence, clearance indexing, and dynamic schema ingestion.
     """
     def __init__(self, storage_file: str = "vault_knowledge_base.json"):
         self.storage_file = storage_file
@@ -300,25 +278,17 @@ class SovereignVaultManager:
 
     def load_or_initialize(self):
         """Loads knowledge base from disk or initializes defaults."""
-        # Check if we should initialize with the new rich coal mines worker registry
         if os.path.exists(self.storage_file):
             try:
                 with open(self.storage_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     self.documents = {doc["doc_id"]: doc for doc in data}
-                    
-                    # If old generic dataset without coal mine workers, upgrade to coal mine dataset
-                    has_coal_mine = any("MINE" in doc.get("doc_id", "") for doc in self.documents.values())
-                    if not has_coal_mine:
-                        print("[Vault] Upgrading vault with Coal Mines Workers Dataset...")
-                        self.documents = {doc["doc_id"]: doc for doc in DEFAULT_CREDENTIAL_KNOWLEDGE_BASE}
-                        self.save()
                     return
             except Exception as e:
                 print(f"[Vault] Failed to load {self.storage_file}, re-initializing default vault: {e}")
 
         # Initialize defaults
-        self.documents = {doc["doc_id"]: doc for doc in DEFAULT_CREDENTIAL_KNOWLEDGE_BASE}
+        self.documents = {doc["doc_id"]: doc for doc in DEFAULT_KNOWLEDGE_BASE}
         self.save()
 
     def save(self):
@@ -336,13 +306,13 @@ class SovereignVaultManager:
         return self.documents.get(doc_id)
 
     def add_document(self, title: str, category: str, clearance_level: int, content: str, metadata: Optional[Dict[str, Any]] = None, custom_id: Optional[str] = None) -> Dict[str, Any]:
-        doc_id = custom_id or f"MINE-CUSTOM-{int(time.time() * 1000) % 100000}"
+        doc_id = custom_id or f"DOC-CUSTOM-{int(time.time() * 1000) % 100000}"
         doc = {
             "doc_id": doc_id,
             "title": title,
             "category": category,
             "clearance_level": int(clearance_level),
-            "metadata": metadata or {"environment": "coal-mine", "owner": "safety-admin", "tags": ["personnel", "coal-mine"]},
+            "metadata": metadata or {"environment": "general", "owner": "admin", "tags": ["custom"]},
             "content": content,
             "created_at": time.time()
         }
@@ -352,81 +322,77 @@ class SovereignVaultManager:
 
     def ingest_tabular_rows(self, rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Ingests a list of row dictionaries (from CSV or Excel upload) into the Sovereign Vault.
-        Auto-maps columns to worker personnel documents.
+        Dynamically ingests ANY tabular dataset (from CSV or Excel upload).
+        Auto-formats all column fields into a structured knowledge document.
         """
         added_docs = []
         for idx, row in enumerate(rows):
-            # Normalize keys to lowercase
-            norm = {str(k).strip().lower().replace(" ", "_").replace("-", "_"): str(v).strip() for k, v in row.items()}
-            
-            worker_id = norm.get("worker_id") or norm.get("id") or norm.get("employee_id") or f"MINE-WRK-{1000 + len(self.documents) + idx}"
-            name = norm.get("worker_name") or norm.get("name") or norm.get("full_name") or f"Worker {worker_id}"
-            job_title = norm.get("job_title") or norm.get("title") or norm.get("designation") or "Mine Technician"
-            category = norm.get("category") or norm.get("department") or norm.get("division") or "Coal Mine Operations"
-            division = norm.get("mine_division") or norm.get("division") or norm.get("section") or norm.get("shaft") or "General Mine Sector"
-            cert = norm.get("statutory_cert") or norm.get("certification") or norm.get("dgms_license") or "Standard Mining Certification"
-            shift = norm.get("shift") or norm.get("timing") or "General Shift"
-            passcode = norm.get("passcode") or norm.get("access_code") or norm.get("locker_key") or norm.get("secret") or ""
-            phone = norm.get("phone") or norm.get("emergency_contact") or ""
-            
-            # Determine clearance level (1 to 4)
-            clearance_raw = norm.get("clearance_level") or norm.get("clearance") or "1"
+            clean_row = {str(k).strip(): str(v).strip() for k, v in row.items() if str(k).strip()}
+            if not clean_row:
+                continue
+
+            # Normalized keys
+            norm = {k.lower().replace(" ", "_").replace("-", "_"): v for k, v in clean_row.items()}
+
+            # Extract identifier and title if present, otherwise auto-generate
+            record_id = (
+                norm.get("id") or norm.get("worker_id") or norm.get("employee_id") or 
+                norm.get("item_id") or norm.get("asset_id") or norm.get("code") or 
+                f"REC-{1000 + len(self.documents) + idx}"
+            )
+            title_main = (
+                norm.get("name") or norm.get("title") or norm.get("job_title") or 
+                norm.get("full_name") or norm.get("service") or norm.get("asset_name") or 
+                f"Record {record_id}"
+            )
+            category = (
+                norm.get("category") or norm.get("department") or norm.get("type") or 
+                norm.get("division") or "Imported Dataset"
+            )
+
+            # Determine clearance level
+            clearance_raw = norm.get("clearance_level") or norm.get("clearance") or norm.get("level") or "1"
             try:
                 clearance = int(str(clearance_raw).replace("level", "").replace("l", "").strip())
                 clearance = max(1, min(4, clearance))
             except Exception:
-                if "manager" in job_title.lower() or "rescue" in job_title.lower() or "director" in job_title.lower():
+                lower_vals = " ".join(norm.values()).lower()
+                if "admin" in lower_vals or "root" in lower_vals or "secret" in lower_vals:
                     clearance = 4
-                elif "engineer" in job_title.lower() or "overman" in job_title.lower() or "officer" in job_title.lower() or "supervisor" in job_title.lower():
+                elif "confidential" in lower_vals or "prod" in lower_vals or "supervisor" in lower_vals:
                     clearance = 3
-                elif "operator" in job_title.lower() or "driller" in job_title.lower():
+                elif "internal" in lower_vals or "dev" in lower_vals or "operator" in lower_vals:
                     clearance = 2
                 else:
                     clearance = 1
 
-            doc_id = f"MINE-CSV-{worker_id.replace(' ', '_').upper()}"
-            title = f"Personnel Record: {name} — {job_title}"
-            
-            # Format content markdown
+            doc_id = f"DOC-IMPORT-{str(record_id).replace(' ', '_').upper()}"
+            doc_title = f"{category}: {title_main} ({record_id})"
+
+            # Build markdown document preserving all dynamic columns
             content_lines = [
-                f"# Statutory Personnel Record: {job_title}",
+                f"# Structured Record: {title_main}",
                 "",
-                "### Worker Identity & Designation",
-                f"- **Worker ID:** `{worker_id}`",
-                f"- **Full Name:** {name}",
-                f"- **Job Title:** {job_title}",
-                f"- **Department / Category:** {category}",
-                f"- **Assigned Division / Shaft:** {division}",
-                f"- **DGMS Statutory Certification:** {cert}",
-                f"- **Shift Schedule:** {shift}"
+                "### Record Attributes & Fields"
             ]
-            if phone:
-                content_lines.append(f"- **Emergency Phone:** `{phone}`")
-            if passcode:
-                content_lines.extend([
-                    "",
-                    "### Operational Access & Confidential Passcode",
-                    f"- **Magazine / Master Passcode:** `Passcode: {passcode}`"
-                ])
-                
+            for key, val in clean_row.items():
+                if val:
+                    content_lines.append(f"- **{key}:** `{val}`")
+
             doc_content = "\n".join(content_lines)
-            metadata = {
-                "worker_id": worker_id,
-                "name": name,
-                "job_title": job_title,
-                "category": category,
-                "division": division,
-                "statutory_cert": cert,
-                "source": "csv_excel_import"
-            }
-            
+
             doc = {
                 "doc_id": doc_id,
-                "title": title,
+                "title": doc_title,
                 "category": category,
                 "clearance_level": clearance,
-                "metadata": metadata,
+                "metadata": {
+                    "record_id": record_id,
+                    "title": title_main,
+                    "category": category,
+                    "source": "tabular_import",
+                    "fields": list(clean_row.keys())
+                },
                 "content": doc_content,
                 "created_at": time.time()
             }
@@ -457,4 +423,3 @@ class SovereignVaultManager:
             "clearance_distribution": counts_by_level,
             "categories": categories
         }
-

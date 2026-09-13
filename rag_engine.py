@@ -1,7 +1,7 @@
 """
 ================================================================================
 SOVEREIGN RAG PIPELINE // ORCHESTRATION, RBAC & SYNTHESIS ENGINE
-100% Python Retrieval-Augmented Generation with Dynamic Redaction & Audit
+Air-Gapped Retrieval-Augmented Generation with Dynamic Redaction & Audit
 ================================================================================
 """
 
@@ -50,9 +50,9 @@ class SovereignRAGEngine:
         redacted = text
         warning_tag = f"[REDACTED — CLEARANCE LEVEL {chunk_clearance} REQUIRED (User Level: {user_clearance})]"
 
-        # Redact Passwords, Passcodes, and Locker Keys
+        # Redact Passwords, Passcodes, and Keys
         redacted = re.sub(
-            r'(Password:\s*`?|Passcode:\s*`?|Locker Key:\s*`?|Master Key Code:\s*`?|Trigger Passcode:\s*`?|Master Auth Key:\s*`?)([^`\n\r]+)(`?)',
+            r'(Password:\s*`?|Passcode:\s*`?|Key Code:\s*`?|Master Key:\s*`?|Locker Key:\s*`?|Secret Key:\s*`?|Root Password:\s*`?)([^`\n\r]+)(`?)',
             rf'\1{warning_tag}\3',
             redacted,
             flags=re.IGNORECASE
@@ -63,13 +63,13 @@ class SovereignRAGEngine:
             rf'\1{warning_tag}\3',
             redacted
         )
-        # Redact API Keys & Tokens (sk_live, sk_test, AKIA, Bearer tokens, secrets, EXPL-BLAST)
+        # Redact API Keys & Tokens (sk_live, sk_test, AKIA, Bearer tokens, secrets)
         redacted = re.sub(
-            r'(sk_live_[A-Za-z0-9_]+|AKIA_[A-Za-z0-9_]+|wJalr[A-Za-z0-9\/+=]+|s\.root_[A-Za-z0-9_]+|s\.mag_[A-Za-z0-9_]+|whsec_[A-Za-z0-9_]+|SG\.[A-Za-z0-9_\.]+|EXPL-BLAST-[A-Za-z0-9_!]+|PLC_SUBSTATION_[A-Za-z0-9_#]+|SIREN_EMERGENCY_[A-Za-z0-9_]+)',
+            r'(sk_live_[A-Za-z0-9_]+|AKIA_[A-Za-z0-9_]+|wJalr[A-Za-z0-9\/+=]+|s\.root_[A-Za-z0-9_]+|s\.mag_[A-Za-z0-9_]+|whsec_[A-Za-z0-9_]+|SG\.[A-Za-z0-9_\.]+|P4\$\$w0rd_[A-Za-z0-9_!#]+)',
             warning_tag,
             redacted
         )
-        # Redact Auth Tokens
+        # Redact Auth Tokens & Bearer Headers
         redacted = re.sub(
             r'(Auth Token:\s*`?|Token:\s*`?|Bearer\s+)([A-Za-z0-9_\-\.]{10,})',
             rf'\1{warning_tag}',
@@ -212,17 +212,16 @@ class SovereignRAGEngine:
         Provides clean markdown formatting, copyable code blocks, clear citations, and security warnings.
         """
         if not sources or sources[0]["hybrid_score"] < 0.15:
-            return f"""### ⚠️ No Sovereign Knowledge Match Found
+            return f"""### ⚠️ No Knowledge Match Found
 
-No relevant records matching query: **"{query}"** were identified in the indexed Sovereign Vault.
+No relevant records matching query: **"{query}"** were identified in the indexed Knowledge Vault.
 
 **Suggestions:**
-- Verify key technical terms (e.g. `PostgreSQL`, `Stripe`, `AWS`, `Redis`, `DNS`, `Rotation`, `SSL`).
+- Verify key technical terms (e.g. database names, service endpoints, employee IDs, secret names).
 - Review active clearance level (**{user_role['name']}** - `{user_role['badge']}`).
-- Add or import custom knowledge documents via the **Vault Knowledge Manager** tab."""
+- Ingest new documents or datasets via the **CSV & Excel Importer** or **Knowledge Base Manager** tab."""
 
         response_lines = []
-        top_doc = sources[0]
 
         # Header with clearance tag
         response_lines.append(f"### 🔐 Sovereign Intelligence Response // Clearance: `{user_role['badge']}`")
@@ -231,7 +230,7 @@ No relevant records matching query: **"{query}"** were identified in the indexed
                 f"> **🔒 SECURITY NOTICE:** Certain confidential fields have been automatically redacted because your active clearance (**{user_role['name']}**) is below the document security threshold."
             )
 
-        response_lines.append("\n#### 📋 Retrieved Credential & Configuration Context\n")
+        response_lines.append("\n#### 📋 Retrieved Context & Knowledge Records\n")
 
         # Synthesize knowledge from sources
         for s in sources:
@@ -241,7 +240,7 @@ No relevant records matching query: **"{query}"** were identified in the indexed
                 response_lines.append(f"{s['text']}\n")
 
         # Summary of Citations
-        response_lines.append("\n---\n#### 📚 Verified Citations & Similarity Breakdown")
+        response_lines.append("\n---\n#### 📚 Verified Citations & Relevance Breakdown")
         for idx, s in enumerate(sources, 1):
             score_pct = int(s["hybrid_score"] * 100)
             response_lines.append(

@@ -140,7 +140,7 @@
       "source": "csv_excel_import"
     },
     "content": "# Statutory Personnel Record: Continuous Miner Co-Pilot\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-201`\n- **Full Name:** Ajay Kumar Verma\n- **Job Title:** Continuous Miner Co-Pilot\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Panel-D Longwall Face\n- **DGMS Statutory Certification:** HEMM License #HM-9912\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00201`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: JOY-PILOT-201`",
-    "created_at": 1789035943.35082
+    "created_at": 1789036509.882888
   },
   {
     "doc_id": "MINE-CSV-MINE-WRK-202",
@@ -157,7 +157,7 @@
       "source": "csv_excel_import"
     },
     "content": "# Statutory Personnel Record: Strata Geotechnical Inspector\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-202`\n- **Full Name:** Pooja Kumari Soren\n- **Job Title:** Strata Geotechnical Inspector\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** North Incline Drift\n- **DGMS Statutory Certification:** DGMS Overman #OM-8831\n- **Shift Schedule:** Shift-B (14:00-22:00)\n- **Emergency Phone:** `+91-98765-00202`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: GEO-STRATA-202`",
-    "created_at": 1789035943.350848
+    "created_at": 1789036509.882902
   },
   {
     "doc_id": "MINE-CSV-MINE-WRK-203",
@@ -174,7 +174,7 @@
       "source": "csv_excel_import"
     },
     "content": "# Statutory Personnel Record: Haulage & Winding Engine Operator\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-203`\n- **Full Name:** Gurpreet Singh Brar\n- **Job Title:** Haulage & Winding Engine Operator\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Main Shaft House\n- **DGMS Statutory Certification:** DGMS Winding License #WN-4412\n- **Shift Schedule:** General Shift\n- **Emergency Phone:** `+91-98765-00203`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: WIND-MSTR-203`",
-    "created_at": 1789035943.350865
+    "created_at": 1789036509.882913
   },
   {
     "doc_id": "MINE-CSV-MINE-WRK-204",
@@ -191,7 +191,7 @@
       "source": "csv_excel_import"
     },
     "content": "# Statutory Personnel Record: Underground Environmental Chemist\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-204`\n- **Full Name:** Deepak Narayan Murthy\n- **Job Title:** Underground Environmental Chemist\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Ventilation Lab 3\n- **DGMS Statutory Certification:** Gas Testing Cert #GT-7721\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00204`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: LAB-GAS-204`",
-    "created_at": 1789035943.3508766
+    "created_at": 1789036509.8829212
   },
   {
     "doc_id": "MINE-CSV-MINE-WRK-207",
@@ -208,6 +208,91 @@
       "source": "csv_excel_import"
     },
     "content": "# Statutory Personnel Record: Chief Occupational Health & Mine Surgeon\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-207`\n- **Full Name:** Dr. Smita R. Banerjee\n- **Job Title:** Chief Occupational Health & Mine Surgeon\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Mine Medical Hospital\n- **DGMS Statutory Certification:** DGMS Medical Examiner #MED-009\n- **Shift Schedule:** General Shift\n- **Emergency Phone:** `+91-98765-00207`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: HOSP-ROOT-207`",
-    "created_at": 1789035943.350888
+    "created_at": 1789036509.8829381
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-205",
+    "title": "Personnel Record: Santosh Yadav — Heavy Dumper Operator (100 Ton)",
+    "category": "Coal Mine Operations",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-WRK-205",
+      "name": "Santosh Yadav",
+      "job_title": "Heavy Dumper Operator (100 Ton)",
+      "category": "Coal Mine Operations",
+      "division": "Opencast Pit Bravo",
+      "statutory_cert": "HEMM Class-2 Dumper #DP-5510",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Heavy Dumper Operator (100 Ton)\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-205`\n- **Full Name:** Santosh Yadav\n- **Job Title:** Heavy Dumper Operator (100 Ton)\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Opencast Pit Bravo\n- **DGMS Statutory Certification:** HEMM Class-2 Dumper #DP-5510\n- **Shift Schedule:** Shift-C (Night)\n- **Emergency Phone:** `+91-98765-00205`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: DUMP-KEY-205`",
+    "created_at": 1789036509.8829274
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-206",
+    "title": "Personnel Record: Manoj Kumar Hansda — Longwall Powered Roof Support Operator",
+    "category": "Coal Mine Operations",
+    "clearance_level": 2,
+    "metadata": {
+      "worker_id": "MINE-WRK-206",
+      "name": "Manoj Kumar Hansda",
+      "job_title": "Longwall Powered Roof Support Operator",
+      "category": "Coal Mine Operations",
+      "division": "Deep Seam Face 2",
+      "statutory_cert": "VTC Certified Operator #VTC-441",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Longwall Powered Roof Support Operator\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-206`\n- **Full Name:** Manoj Kumar Hansda\n- **Job Title:** Longwall Powered Roof Support Operator\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Deep Seam Face 2\n- **DGMS Statutory Certification:** VTC Certified Operator #VTC-441\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00206`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: PRS-SHIELD-206`",
+    "created_at": 1789036509.8829331
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-208",
+    "title": "Personnel Record: Kishan Lal Mahato — Conveyor Belt & Feeder Breaker Tech",
+    "category": "Coal Mine Operations",
+    "clearance_level": 1,
+    "metadata": {
+      "worker_id": "MINE-WRK-208",
+      "name": "Kishan Lal Mahato",
+      "job_title": "Conveyor Belt & Feeder Breaker Tech",
+      "category": "Coal Mine Operations",
+      "division": "Main Drift Trunk Line",
+      "statutory_cert": "Mechanical Mining Cert #MECH-882",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Conveyor Belt & Feeder Breaker Tech\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-208`\n- **Full Name:** Kishan Lal Mahato\n- **Job Title:** Conveyor Belt & Feeder Breaker Tech\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Main Drift Trunk Line\n- **DGMS Statutory Certification:** Mechanical Mining Cert #MECH-882\n- **Shift Schedule:** Shift-B (14:00-22:00)\n- **Emergency Phone:** `+91-98765-00208`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: CNV-LOCK-208`",
+    "created_at": 1789036509.882944
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-209",
+    "title": "Personnel Record: Albert Khalkho — Shotfirer & Secondary Blaster",
+    "category": "Coal Mine Operations",
+    "clearance_level": 3,
+    "metadata": {
+      "worker_id": "MINE-WRK-209",
+      "name": "Albert Khalkho",
+      "job_title": "Shotfirer & Secondary Blaster",
+      "category": "Coal Mine Operations",
+      "division": "Pit #4 Heading Section",
+      "statutory_cert": "DGMS Shotfirer Permit #SF-9910",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Shotfirer & Secondary Blaster\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-209`\n- **Full Name:** Albert Khalkho\n- **Job Title:** Shotfirer & Secondary Blaster\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Pit #4 Heading Section\n- **DGMS Statutory Certification:** DGMS Shotfirer Permit #SF-9910\n- **Shift Schedule:** Shift-A (06:00-14:00)\n- **Emergency Phone:** `+91-98765-00209`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: BLAST-SUB-209`",
+    "created_at": 1789036509.8829503
+  },
+  {
+    "doc_id": "MINE-CSV-MINE-WRK-210",
+    "title": "Personnel Record: Col. Arvind Rathore — Mine Security & Explosives Escort Lead",
+    "category": "Coal Mine Operations",
+    "clearance_level": 4,
+    "metadata": {
+      "worker_id": "MINE-WRK-210",
+      "name": "Col. Arvind Rathore",
+      "job_title": "Mine Security & Explosives Escort Lead",
+      "category": "Coal Mine Operations",
+      "division": "Main Security Gate & Armoury",
+      "statutory_cert": "Central Industrial Security Cert",
+      "source": "csv_excel_import"
+    },
+    "content": "# Statutory Personnel Record: Mine Security & Explosives Escort Lead\n\n### Worker Identity & Designation\n- **Worker ID:** `MINE-WRK-210`\n- **Full Name:** Col. Arvind Rathore\n- **Job Title:** Mine Security & Explosives Escort Lead\n- **Department / Category:** Coal Mine Operations\n- **Assigned Division / Shaft:** Main Security Gate & Armoury\n- **DGMS Statutory Certification:** Central Industrial Security Cert\n- **Shift Schedule:** 24/7 Command\n- **Emergency Phone:** `+91-98765-00210`\n\n### Operational Access & Confidential Passcode\n- **Magazine / Master Passcode:** `Passcode: ARM-SEC-PASS-210`",
+    "created_at": 1789036509.8829565
   }
 ]
