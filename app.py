@@ -2,7 +2,7 @@
 ================================================================================
 SOVEREIGN RAG CHATBOT & ENTERPRISE KNOWLEDGE VAULT
 Air-Gapped, Zero-External-Dependency Local Application & Server
-With Credential Authentication Gate, Indian Sample Datasets & LAN Support
+With Offline Mobile / Phone PWA Support & Local LAN Binding (0.0.0.0)
 ================================================================================
 """
 
@@ -14,21 +14,12 @@ import os
 import sys
 import time
 import socket
-import csv
-import io
 from typing import Any, Dict, List, Optional
 
 from vector_engine import SovereignVectorEngine
 from vault_manager import SovereignVaultManager, CLEARANCE_LEVELS
 from rag_engine import SovereignRAGEngine
 from qr_generator import generate_qr_svg
-from auth_manager import SovereignAuthManager
-from indian_datasets import (
-    INDIAN_CYBER_NIC_DATASET_CSV,
-    INDIAN_CRITICAL_INFRA_DATASET_CSV,
-    INDIAN_BANKING_NPCI_DATASET_CSV,
-    SAMPLE_INDIAN_OFFICERS
-)
 
 PORT = 8000
 
@@ -36,21 +27,6 @@ PORT = 8000
 vault_manager = SovereignVaultManager("vault_knowledge_base.json")
 vector_engine = SovereignVectorEngine(embedding_dim=128, hybrid_alpha=0.65)
 rag_engine = SovereignRAGEngine(vault=vault_manager, vector_engine=vector_engine)
-auth_manager = SovereignAuthManager()
-
-# Pre-register default Indian datasets into Vault & Auth Registry
-def seed_indian_datasets():
-    reader = csv.DictReader(io.StringIO(INDIAN_CYBER_NIC_DATASET_CSV.strip()))
-    rows = list(reader)
-    existing_ids = set(vault_manager.documents.keys())
-    if not any("IND-NIC-101" in str(eid) for eid in existing_ids):
-        vault_manager.ingest_tabular_rows(rows)
-    auth_manager.register_users_from_tabular_rows(rows)
-    rag_engine.reindex_knowledge_base()
-
-
-
-seed_indian_datasets()
 
 
 def get_local_lan_ip() -> str:
@@ -92,7 +68,7 @@ PWA_MANIFEST = {
 
 # Service Worker for 100% Offline Client Caching
 SERVICE_WORKER_JS = r"""// Sovereign RAG Offline Service Worker
-const CACHE_NAME = 'sovereign-rag-v2';
+const CACHE_NAME = 'sovereign-rag-v1';
 const OFFLINE_URLS = [
   '/',
   '/index.html',
@@ -219,10 +195,10 @@ UI_HTML = r"""<!DOCTYPE html>
     
     /* Top Bar */
     .top-bar {
-      background: rgba(10, 14, 26, 0.94);
+      background: rgba(10, 14, 26, 0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 10px 20px;
+      padding: 8px 20px;
       display: flex; justify-content: space-between; align-items: center;
       font-family: var(--font-mono); font-size: 0.8rem;
       position: sticky; top: 0; z-index: 100;
@@ -231,8 +207,8 @@ UI_HTML = r"""<!DOCTYPE html>
     
     .badge-clearance {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 14px; border-radius: var(--radius-sm);
-      font-weight: 700; letter-spacing: 0.05em; font-size: 0.78rem;
+      padding: 4px 12px; border-radius: var(--radius-sm);
+      font-weight: 700; letter-spacing: 0.05em;
     }
     
     .btn-phone-hud {
@@ -242,7 +218,7 @@ UI_HTML = r"""<!DOCTYPE html>
       font-family: var(--font-mono);
       font-size: 0.76rem;
       font-weight: 700;
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: var(--radius-sm);
       cursor: pointer;
       display: inline-flex; align-items: center; gap: 6px;
@@ -254,6 +230,18 @@ UI_HTML = r"""<!DOCTYPE html>
       box-shadow: 0 0 14px rgba(0, 255, 157, 0.4);
     }
     
+    .role-select {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border-subtle);
+      color: var(--color-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+    
     .pulse-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: var(--color-cyan);
@@ -261,11 +249,10 @@ UI_HTML = r"""<!DOCTYPE html>
       animation: pulse 1.6s infinite ease-in-out;
     }
     .pulse-dot.emerald { background: var(--color-emerald); }
-    .pulse-dot.magenta { background: var(--color-magenta); }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } }
     
     /* Container */
-    .app-container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+    .app-container { max-width: 1560px; margin: 0 auto; padding: 20px; }
     
     .app-header {
       display: flex; justify-content: space-between; align-items: flex-end;
@@ -306,7 +293,7 @@ UI_HTML = r"""<!DOCTYPE html>
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     
     /* Layouts */
-    .chat-layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; height: 720px; }
+    .chat-layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; height: 680px; }
     
     .glass-panel {
       background: var(--bg-card); backdrop-filter: blur(16px);
@@ -319,24 +306,6 @@ UI_HTML = r"""<!DOCTYPE html>
       border-bottom: 1px solid var(--border-subtle);
       display: flex; justify-content: space-between; align-items: center;
       font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
-    }
-    
-    /* Auth Gate Banner & Modal */
-    .auth-gate-box {
-      background: rgba(10, 14, 26, 0.95);
-      border: 1px solid var(--border-active);
-      border-radius: var(--radius-md);
-      padding: 18px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 0 24px rgba(0, 240, 255, 0.15);
-    }
-    .officer-badge-active {
-      background: rgba(0, 255, 157, 0.08);
-      border: 1px solid rgba(0, 255, 157, 0.3);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 14px;
     }
     
     /* Chat Messages Box */
@@ -368,6 +337,10 @@ UI_HTML = r"""<!DOCTYPE html>
       background: rgba(0, 240, 255, 0.08); padding: 2px 6px; border-radius: 3px;
       color: var(--color-cyan);
     }
+    .msg-bubble blockquote {
+      border-left: 3px solid var(--color-amber); background: rgba(255, 184, 0, 0.08);
+      padding: 8px 12px; margin: 10px 0; font-size: 0.88rem; color: #ffdd88;
+    }
     
     /* Input Area */
     .chat-input-row {
@@ -380,15 +353,13 @@ UI_HTML = r"""<!DOCTYPE html>
       font-family: var(--font-sans); font-size: 0.92rem; outline: none; min-height: 44px;
     }
     .chat-input:focus { border-color: var(--color-cyan); box-shadow: 0 0 12px rgba(0, 240, 255, 0.2); }
-    .chat-input:disabled { opacity: 0.5; cursor: not-allowed; background: rgba(0,0,0,0.7); }
     
     .btn-send {
       background: rgba(0, 240, 255, 0.15); border: 1px solid var(--color-cyan);
       color: var(--color-cyan); padding: 0 20px; border-radius: var(--radius-sm);
       font-family: var(--font-mono); font-weight: 700; cursor: pointer; transition: all 0.2s; min-height: 44px;
     }
-    .btn-send:hover:not(:disabled) { background: var(--color-cyan); color: #000; box-shadow: 0 0 16px var(--color-cyan); }
-    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--text-dim); color: var(--text-dim); }
+    .btn-send:hover { background: var(--color-cyan); color: #000; box-shadow: 0 0 16px var(--color-cyan); }
     
     /* Quick Prompt Chips */
     .quick-chips { display: flex; gap: 8px; padding: 8px 18px; background: #070a14; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -418,26 +389,12 @@ UI_HTML = r"""<!DOCTYPE html>
     .data-table tr:hover td { background: rgba(0, 240, 255, 0.02); }
     
     .badge-tag {
-      padding: 3px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
     }
     .badge-lvl1 { background: rgba(0, 240, 255, 0.12); color: var(--color-cyan); border: 1px solid var(--color-cyan); }
     .badge-lvl2 { background: rgba(0, 255, 157, 0.12); color: var(--color-emerald); border: 1px solid var(--color-emerald); }
     .badge-lvl3 { background: rgba(255, 184, 0, 0.12); color: var(--color-amber); border: 1px solid var(--color-amber); }
     .badge-lvl4 { background: rgba(255, 0, 85, 0.12); color: var(--color-magenta); border: 1px solid var(--color-magenta); }
-    
-    /* Dataset Cards in Column 1 */
-    .dataset-card {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin-bottom: 12px;
-      transition: all 0.2s;
-    }
-    .dataset-card:hover {
-      border-color: var(--color-cyan);
-      background: rgba(0, 240, 255, 0.04);
-    }
     
     /* Forms & Controls */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -453,8 +410,8 @@ UI_HTML = r"""<!DOCTYPE html>
     
     .btn-hud {
       background: rgba(0, 240, 255, 0.1); border: 1px solid var(--border-subtle);
-      color: var(--color-cyan); padding: 9px 16px; border-radius: var(--radius-sm);
-      font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
+      color: var(--color-cyan); padding: 10px 18px; border-radius: var(--radius-sm);
+      font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700;
       cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-hud:hover { background: rgba(0, 240, 255, 0.2); border-color: var(--color-cyan); }
@@ -483,7 +440,7 @@ UI_HTML = r"""<!DOCTYPE html>
     }
     
     /* Responsive Media Queries for Mobile Screens */
-    @media (max-width: 1100px) {
+    @media (max-width: 1024px) {
       .chat-layout { grid-template-columns: 1fr; height: auto; }
       .chat-messages { height: 450px; }
       .form-grid { grid-template-columns: 1fr; }
@@ -507,22 +464,28 @@ UI_HTML = r"""<!DOCTYPE html>
   <!-- Top Classification & Role Bar -->
   <header class="top-bar">
     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-      <span class="badge-clearance badge-lvl4" id="top-clearance-badge">
-        <span class="pulse-dot emerald" id="top-pulse-dot"></span>
-        <span id="role-display-text">AIR-GAPPED // AUTHENTICATED: LEVEL-4 (ROOT DIRECTOR)</span>
+      <span class="badge-clearance badge-lvl3" id="top-clearance-badge">
+        <span class="pulse-dot"></span>
+        <span id="role-display-text">AIR-GAPPED // LEVEL-3 (OPS LEAD)</span>
       </span>
-      <span style="color: var(--text-dim); font-size: 0.72rem;" class="hide-mobile">ZERO-INTERNET RUNTIME</span>
+      <span style="color: var(--text-dim); font-size: 0.72rem;" class="hide-mobile">OFFLINE RUNTIME: STANDALONE PYTHON 3</span>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
       <button id="btn-phone-modal" class="btn-phone-hud">
         <span class="pulse-dot emerald"></span>
         <span>📱 PHONE &amp; OFFLINE ACCESS</span>
       </button>
 
-      <button id="btn-auth-switch" class="btn-hud" style="font-size: 0.76rem; padding: 5px 12px; border-color: var(--color-cyan);">
-        🔑 SWITCH CREDENTIALS
-      </button>
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <label style="color: var(--text-muted); font-size: 0.72rem;">CLEARANCE:</label>
+        <select id="role-select" class="role-select">
+          <option value="1">Level 1: Public / Intern (Redacted)</option>
+          <option value="2">Level 2: Restricted / Operator</option>
+          <option value="3" selected>Level 3: Confidential / Ops Lead</option>
+          <option value="4">Level 4: Top Secret / Root Admin</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -537,7 +500,7 @@ UI_HTML = r"""<!DOCTYPE html>
           SOVEREIGN RAG // SECURE KNOWLEDGE VAULT
         </h1>
         <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">
-          Air-Gapped Hybrid Vector Retrieval &bull; Credential Authentication Gate &bull; Indian Sovereign Datasets &bull; 100% Offline
+          Air-Gapped Hybrid Vector Retrieval &bull; Dynamic Secret Redaction &bull; Tabular Dataset Ingestion &bull; 100% Offline
         </div>
       </div>
     </div>
@@ -548,7 +511,7 @@ UI_HTML = r"""<!DOCTYPE html>
         💬 Sovereign Chatbot
       </button>
       <button class="tab-btn" onclick="switchTab('importer')">
-        📥 Indian Datasets &amp; CSV Loader
+        📥 CSV &amp; Excel Importer
       </button>
       <button class="tab-btn" onclick="switchTab('inspector')">
         🔍 RAG Pipeline Inspector
@@ -565,46 +528,6 @@ UI_HTML = r"""<!DOCTYPE html>
     <!-- TAB 1: SOVEREIGN CHATBOT -->
     <!-- ==================================================================== -->
     <section id="tab-chat" class="tab-panel active">
-      <!-- Officer Active ID Card -->
-      <div id="auth-officer-banner" class="officer-badge-active">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 1.3rem;">🇮🇳</span>
-          <div>
-            <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">
-              <span id="officer-name">Dr. Rajesh Kumar Sharma</span> 
-              <span style="color: var(--color-cyan); font-family: var(--font-mono); font-size: 0.8rem;" id="officer-id">(IND-NIC-101)</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted);" id="officer-dept">
-              Chief Information Security Officer &bull; NIC National Data Center &bull; MeghRaj Cloud Node
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span class="badge-tag badge-lvl4" id="officer-lvl-tag">LEVEL-4 (ROOT ADMIN)</span>
-          <button class="btn-hud" onclick="openAuthModal()" style="font-size: 0.72rem; padding: 4px 10px;">
-            CHANGE ID
-          </button>
-        </div>
-      </div>
-
-      <!-- Credential Barrier Warning (When Logged Out) -->
-      <div id="auth-lock-banner" class="auth-gate-box" style="display: none; border-color: var(--color-magenta);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 1.6rem;">🔒</span>
-            <div>
-              <div style="font-weight: 700; color: var(--color-magenta); font-size: 0.95rem;">CREDENTIAL AUTHENTICATION REQUIRED TO ACCESS CHAT</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted);">
-                The Sovereign Intelligence Console requires an authenticated Personnel ID and Security Passcode.
-              </div>
-            </div>
-          </div>
-          <button class="btn-send" onclick="openAuthModal()" style="font-size: 0.8rem; padding: 0 16px; height: 38px;">
-            🔑 AUTHENTICATE NOW
-          </button>
-        </div>
-      </div>
-
       <div class="chat-layout">
         <!-- Main Chat Area -->
         <div class="glass-panel">
@@ -614,11 +537,11 @@ UI_HTML = r"""<!DOCTYPE html>
           </div>
 
           <div class="quick-chips">
-            <div class="chip" onclick="askPreset('What are the master root credentials for NIC MeghRaj Cloud node?')">NIC Cloud Root</div>
-            <div class="chip" onclick="askPreset('Show Indian Cyber Defense and CERT-In threat intelligence roster')">CERT-In Personnel</div>
-            <div class="chip" onclick="askPreset('Show UPI 2.0 switch and NPCI payment settlement keys')">NPCI UPI Keys</div>
-            <div class="chip" onclick="askPreset('What is the NavIC ground station telemetry passcode for ISRO?')">ISRO Satellite Key</div>
-            <div class="chip" onclick="askPreset('What are the staging PostgreSQL database connection parameters?')">Staging DB</div>
+            <div class="chip" onclick="askPreset('What are the staging database connection credentials?')">Staging Database</div>
+            <div class="chip" onclick="askPreset('Show corporate personnel and department directory')">Personnel Directory</div>
+            <div class="chip" onclick="askPreset('Show third-party sandbox API keys (Stripe, Twilio, SendGrid)')">Sandbox API Keys</div>
+            <div class="chip" onclick="askPreset('What is the secret rotation and incident runbook?')">Rotation Policy</div>
+            <div class="chip" onclick="askPreset('Show AWS production master IAM root keys and KMS ID')">AWS Root Keys</div>
           </div>
 
           <div id="chat-messages" class="chat-messages">
@@ -651,123 +574,65 @@ UI_HTML = r"""<!DOCTYPE html>
     </section>
 
     <!-- ==================================================================== -->
-    <!-- TAB 2: INDIAN DATASETS & CSV IMPORTER (3-COLUMN DEDICATED LAYOUT) -->
+    <!-- TAB 2: CSV & EXCEL DATASET IMPORTER -->
     <!-- ==================================================================== -->
     <section id="tab-importer" class="tab-panel">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
-        
-        <!-- COLUMN 1: 🇮🇳 DEDICATED INDIAN SAMPLE DATASETS -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px;">
+        <!-- Left: Upload & Input Controls Column -->
         <div class="glass-panel" style="padding: 20px;">
           <div class="panel-header" style="background: transparent; padding: 0 0 14px 0; margin-bottom: 14px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>🇮🇳</span>
-              <span>INDIAN SOVEREIGN SAMPLE DATASETS</span>
-            </div>
-          </div>
-
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
-            Select any pre-configured Indian sovereign dataset to immediately populate the editor and re-index the vector space:
-          </p>
-
-          <!-- Card 1: NIC Cyber & Cloud -->
-          <div class="dataset-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-              <span style="font-weight: 700; color: var(--color-cyan); font-size: 0.88rem;">National Cyber &amp; NIC Cloud Registry</span>
-              <span class="badge-tag badge-lvl4">LEVEL 1-4</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px;">
-              NIC MeghRaj, CERT-In, ISRO Telemetry, C-DAC Param Supercomputing, UIDAI CIDR &amp; NPCI UPI 2.0 Credentials.
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-hud" onclick="loadIndianSampleDataset('cyber')" style="flex: 1; justify-content: center; font-size: 0.76rem;">
-                ⚡ LOAD NIC DATASET
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 2: Critical Infrastructure -->
-          <div class="dataset-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-              <span style="font-weight: 700; color: var(--color-emerald); font-size: 0.88rem;">Critical Infrastructure &amp; PSU Assets</span>
-              <span class="badge-tag badge-lvl3">LEVEL 2-4</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px;">
-              ONGC Offshore, NTPC Turbines, GAIL Gas Pipeline, SAIL Bhilai, NHAI FASTag &amp; DRDO Test Range SCADA.
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-hud" onclick="loadIndianSampleDataset('infra')" style="flex: 1; justify-content: center; font-size: 0.76rem;">
-                ⚡ LOAD INFRA DATASET
-              </button>
-            </div>
-          </div>
-
-          <!-- Card 3: Banking & Payment Switch -->
-          <div class="dataset-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-              <span style="font-weight: 700; color: var(--color-amber); font-size: 0.88rem;">Indian Banking &amp; UPI Switch Hub</span>
-              <span class="badge-tag badge-lvl4">LEVEL 3-4</span>
-            </div>
-            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px;">
-              NPCI UPI Core, RBI e-Kuber, SBI YONO Gateway, HDFC ISO-20022 &amp; Aadhaar e-KYC Hub Keys.
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-hud" onclick="loadIndianSampleDataset('banking')" style="flex: 1; justify-content: center; font-size: 0.76rem;">
-                ⚡ LOAD BANKING DATASET
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- COLUMN 2: CUSTOM CSV / EXCEL UPLOADER & RAW EDITOR -->
-        <div class="glass-panel" style="padding: 20px;">
-          <div class="panel-header" style="background: transparent; padding: 0 0 14px 0; margin-bottom: 14px;">
-            <span>CUSTOM FILE UPLOAD &amp; EDITOR</span>
+            <span>IMPORT DATASET (CSV / EXCEL)</span>
           </div>
 
           <!-- Drag and Drop Box -->
-          <div id="drop-zone" style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(0, 0, 0, 0.3); margin-bottom: 14px;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" style="margin-bottom: 6px;">
+          <div id="drop-zone" style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 24px 16px; text-align: center; cursor: pointer; transition: all 0.2s; background: rgba(0, 0, 0, 0.3); margin-bottom: 14px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-cyan)" stroke-width="2" style="margin-bottom: 8px;">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-main);">Drop CSV or Excel (.xlsx) file here</div>
-            <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">or click to browse local files</div>
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Drop CSV or Excel (.xlsx) file here</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">or click to select file from your system</div>
             <input type="file" id="file-input" accept=".csv, .tsv, .txt, .xlsx, .xls" style="display: none;">
           </div>
 
-          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-            <button id="btn-download-template" class="btn-hud" style="flex: 1; justify-content: center; font-size: 0.76rem;">
-              📥 DOWNLOAD TEMPLATE (CSV)
+          <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+            <button id="btn-load-sample" class="btn-hud" style="flex: 1; justify-content: center; font-size: 0.76rem;">
+              ⚡ LOAD SAMPLE DATASET (CSV)
+            </button>
+            <button id="btn-download-template" class="btn-hud" style="justify-content: center; font-size: 0.76rem;">
+              📥 TEMPLATE
             </button>
           </div>
 
-          <label style="font-size: 0.76rem; font-family: var(--font-mono); color: var(--text-muted);">Raw Tabular Text / CSV Editor:</label>
-          <textarea id="csv-text-input" class="form-input" style="height: 180px; resize: vertical; font-family: var(--font-mono); font-size: 0.74rem; line-height: 1.4;" placeholder="Personnel_ID,Officer_Name,Designation,Agency_Department,Station_City,Clearance_Level,Assigned_Subsystem,Access_Token,Emergency_Passcode"></textarea>
+          <label style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-muted);">Or Paste Raw CSV Data:</label>
+          <textarea id="csv-text-input" class="form-input" style="height: 180px; resize: vertical; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.4;" placeholder="id,name,role,department,location,clearance,access_token
+EMP-101,Elena Rostova,Lead Security Analyst,Cyber Defense,US-East,3,SEC-TOK-9912
+EMP-102,Marcus Vance,Cloud Systems Architect,Infrastructure,EU-Central,3,CLOUD-KEY-4410"></textarea>
 
-          <button id="btn-ingest-dataset" class="btn-send" style="width: 100%; height: 44px; margin-top: 10px;">
+          <button id="btn-ingest-dataset" class="btn-send" style="width: 100%; height: 44px; margin-top: 6px;">
             🚀 INGEST &amp; RE-INDEX VECTOR SPACE
           </button>
         </div>
 
-        <!-- COLUMN 3: PARSED SCHEMA PREVIEW & INGESTION TELEMETRY -->
+        <!-- Right: Tabular Preview & Ingestion Column -->
         <div class="glass-panel" style="padding: 20px;">
           <div class="panel-header" style="background: transparent; padding: 0 0 14px 0; margin-bottom: 14px;">
-            <span>PARSED SCHEMA &amp; TELEMETRY</span>
+            <span>PARSED DATASET PREVIEW &amp; TELEMETRY</span>
             <span id="preview-row-count" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-cyan);">0 ROWS READY</span>
           </div>
 
-          <div id="import-telemetry-box" style="display: none; background: rgba(0, 255, 157, 0.08); border: 1px solid rgba(0, 255, 157, 0.4); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 0.8rem; color: #00ff9d;">
+          <div id="import-telemetry-box" style="display: none; background: rgba(0, 255, 157, 0.08); border: 1px solid rgba(0, 255, 157, 0.4); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 0.82rem; color: #00ff9d;">
             <!-- Live telemetry -->
           </div>
 
-          <div style="overflow-x: auto; max-height: 480px;">
+          <div style="overflow-x: auto; max-height: 520px;">
             <table class="data-table">
               <thead id="preview-table-head">
                 <tr>
                   <th>ID</th>
-                  <th>Officer / Title</th>
-                  <th>Agency / Dept</th>
+                  <th>Name / Title</th>
+                  <th>Department / Category</th>
                   <th>Clearance</th>
                   <th>Attributes Preview</th>
                 </tr>
@@ -775,7 +640,7 @@ UI_HTML = r"""<!DOCTYPE html>
               <tbody id="preview-table-body">
                 <tr>
                   <td colspan="5" style="text-align: center; color: var(--text-dim); padding: 40px 0;">
-                    Click any <b>"LOAD DATASET"</b> button on the left to preview parsed rows.
+                    No CSV or Excel data loaded yet. Drop a file or click <b>"LOAD SAMPLE DATASET"</b> to preview rows.
                   </td>
                 </tr>
               </tbody>
@@ -816,11 +681,11 @@ UI_HTML = r"""<!DOCTYPE html>
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">DOCUMENT TITLE / SERVICE NAME:</label>
-              <input type="text" id="doc-title" class="form-input" placeholder="e.g. NIC Data Center Node" required>
+              <input type="text" id="doc-title" class="form-input" placeholder="e.g. Production Redis Cluster" required>
             </div>
             <div class="form-group">
               <label class="form-label">CATEGORY:</label>
-              <input type="text" id="doc-category" class="form-input" placeholder="e.g. Cloud Infrastructure" required>
+              <input type="text" id="doc-category" class="form-input" placeholder="e.g. Cache Infrastructure" required>
             </div>
           </div>
 
@@ -828,18 +693,18 @@ UI_HTML = r"""<!DOCTYPE html>
             <label class="form-label">MINIMUM REQUIRED CLEARANCE LEVEL:</label>
             <select id="doc-clearance" class="form-select">
               <option value="1">Level 1: Public / Intern</option>
-              <option value="2">Level 2: Restricted / Operator</option>
-              <option value="3">Level 3: Confidential / Ops Lead</option>
-              <option value="4" selected>Level 4: Top Secret / Root Admin</option>
+              <option value="2">Level 2: Restricted / Junior Dev</option>
+              <option value="3" selected>Level 3: Confidential / Senior DevOps</option>
+              <option value="4">Level 4: Top Secret / Security Lead (Root)</option>
             </select>
           </div>
 
           <div class="form-group" style="margin-bottom: 16px;">
             <label class="form-label">DOCUMENT BODY / SECRETS / CREDENTIALS (MARKDOWN SUPPORTED):</label>
             <textarea id="doc-content" class="form-textarea" placeholder="### Credentials & Connection Details
-- Host: nic-node.cloud.gov.in
-- Auth Token: nic_secret_998124
-- Port: 443" required></textarea>
+- Host: redis-prod.internal.corp
+- Auth Token: redis_secret_998124
+- Port: 6379" required></textarea>
           </div>
 
           <button type="submit" class="btn-hud" style="width: 100%; justify-content: center; height: 44px;">
@@ -893,8 +758,8 @@ UI_HTML = r"""<!DOCTYPE html>
             <thead>
               <tr>
                 <th>Timestamp</th>
-                <th>Officer / Role</th>
                 <th>User Query</th>
+                <th>Assigned Role</th>
                 <th>Verdict / Policy</th>
                 <th>Retrieved Docs</th>
                 <th>Latency</th>
@@ -909,88 +774,6 @@ UI_HTML = r"""<!DOCTYPE html>
         </div>
       </div>
     </section>
-  </div>
-
-  <!-- ==================================================================== -->
-  <!-- MODAL: SOVEREIGN CREDENTIAL & IDENTITY GATE -->
-  <!-- ==================================================================== -->
-  <div id="auth-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-card" style="max-width: 680px; width: 95%;">
-      <div class="modal-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 1.4rem;">🔐</span>
-          <div>
-            <div style="font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: #fff;">SOVEREIGN IDENTITY &amp; CREDENTIAL GATE</div>
-            <div style="font-size: 0.75rem; color: var(--color-cyan); font-family: var(--font-mono);">ROLE-BASED CLEARANCE VERIFICATION</div>
-          </div>
-        </div>
-        <button onclick="closeAuthModal()" class="btn-close">&times;</button>
-      </div>
-
-      <div class="modal-body" style="padding: 20px;">
-        <!-- Quick Login Cards (Sample Indian Officers) -->
-        <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 10px;">
-          ⚡ 1-CLICK QUICK AUTHENTICATE AS SAMPLE INDIAN SOVEREIGN PERSONNEL:
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-          <div class="mode-card" style="cursor: pointer;" onclick="quickLogin('IND-NIC-101', 'NIC-ROOT-99824')">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-weight: 700; color: #fff; font-size: 0.82rem;">Dr. Rajesh Sharma</span>
-              <span class="badge-tag badge-lvl4">LEVEL-4 (ROOT)</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--color-cyan);">IND-NIC-101 &bull; CISO, NIC Cloud</div>
-          </div>
-
-          <div class="mode-card" style="cursor: pointer;" onclick="quickLogin('IND-CERT-202', 'CERT-TOK-4412')">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-weight: 700; color: #fff; font-size: 0.82rem;">Ananya Deshmukh</span>
-              <span class="badge-tag badge-lvl3">LEVEL-3 (OPS)</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--color-amber);">IND-CERT-202 &bull; CERT-In Threat Lead</div>
-          </div>
-
-          <div class="mode-card" style="cursor: pointer;" onclick="quickLogin('IND-ISRO-303', 'ISRO-SAT-7719')">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-weight: 700; color: #fff; font-size: 0.82rem;">Vikramaditya Rao</span>
-              <span class="badge-tag badge-lvl3">LEVEL-3 (OPS)</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--color-amber);">IND-ISRO-303 &bull; ISRO Satellite Lead</div>
-          </div>
-
-          <div class="mode-card" style="cursor: pointer;" onclick="quickLogin('IND-INT-010', 'DEV-SANDBOX-101')">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-weight: 700; color: #fff; font-size: 0.82rem;">Aarav Mehta</span>
-              <span class="badge-tag badge-lvl1">LEVEL-1 (INTERN)</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--color-cyan);">IND-INT-010 &bull; Cloud Trainee</div>
-          </div>
-        </div>
-
-        <div style="text-align: center; color: var(--text-dim); font-size: 0.76rem; font-family: var(--font-mono); margin: 12px 0;">
-          ─── OR ENTER CUSTOM PERSONNEL ID &amp; PASSCODE ───
-        </div>
-
-        <form id="form-auth-manual" onsubmit="handleManualAuth(event)">
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">PERSONNEL ID / ACCESS TOKEN:</label>
-              <input type="text" id="auth-input-id" class="form-input" placeholder="e.g. IND-NIC-101 or Asset ID" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">SECURITY PASSCODE / KEY:</label>
-              <input type="password" id="auth-input-pass" class="form-input" placeholder="e.g. NIC-ROOT-99824" required>
-            </div>
-          </div>
-
-          <div id="auth-err-msg" style="display: none; color: var(--color-magenta); font-size: 0.78rem; font-family: var(--font-mono); margin-bottom: 12px;"></div>
-
-          <button type="submit" class="btn-send" style="width: 100%; height: 44px;">
-            🔓 VERIFY CREDENTIALS &amp; UNLOCK CONSOLE
-          </button>
-        </form>
-      </div>
-    </div>
   </div>
 
   <!-- ==================================================================== -->
@@ -1073,21 +856,9 @@ UI_HTML = r"""<!DOCTYPE html>
       });
     }
 
-    // Active Authenticated Officer State
-    let currentAuthSession = {
-      authenticated: true,
-      session_token: "INIT-ROOT",
-      user_id: "IND-NIC-101",
-      name: "Dr. Rajesh Kumar Sharma",
-      designation: "Chief Information Security Officer",
-      department: "NIC National Data Center",
-      station: "New Delhi",
-      clearance_level: 4,
-      subsystem: "MeghRaj Cloud Master Node"
-    };
-
+    let currentClearance = 3;
     let cachedVaultDocs = [];
-    let parsedDatasetRows = [];
+    let mobileAccessUrl = window.location.origin;
 
     // Tab Navigation
     function switchTab(tabId) {
@@ -1104,89 +875,24 @@ UI_HTML = r"""<!DOCTYPE html>
       if (tabId === 'audit') loadAuditLogs();
     }
 
-    // Auth Modal Handlers
-    function openAuthModal() {
-      document.getElementById('auth-modal').style.display = 'flex';
-      document.getElementById('auth-err-msg').style.display = 'none';
-    }
-    function closeAuthModal() {
-      document.getElementById('auth-modal').style.display = 'none';
-    }
-    document.getElementById('btn-auth-switch').addEventListener('click', openAuthModal);
+    // Role / Clearance Selector
+    const roleSelect = document.getElementById('role-select');
+    const topClearanceBadge = document.getElementById('top-clearance-badge');
+    const roleDisplayText = document.getElementById('role-display-text');
 
-    async function quickLogin(userId, passcode) {
-      await performAuthentication(userId, passcode);
-    }
+    const ROLE_CONFIGS = {
+      1: { name: 'LEVEL-1 (PUBLIC / INTERN)', badgeClass: 'badge-lvl1' },
+      2: { name: 'LEVEL-2 (RESTRICTED / OPERATOR)', badgeClass: 'badge-lvl2' },
+      3: { name: 'LEVEL-3 (CONFIDENTIAL / OPS LEAD)', badgeClass: 'badge-lvl3' },
+      4: { name: 'LEVEL-4 (TOP SECRET / ROOT ADMIN)', badgeClass: 'badge-lvl4' }
+    };
 
-    async function handleManualAuth(e) {
-      e.preventDefault();
-      const id = document.getElementById('auth-input-id').value.trim();
-      const pass = document.getElementById('auth-input-pass').value.trim();
-      await performAuthentication(id, pass);
-    }
-
-    async function performAuthentication(userId, passcode) {
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ personnel_id: userId, passcode: passcode })
-        });
-        const data = await res.json();
-        if (data.authenticated) {
-          currentAuthSession = data.profile;
-          updateAuthUI();
-          closeAuthModal();
-          alert(`✅ Authenticated as ${currentAuthSession.name} (Clearance Level ${currentAuthSession.clearance_level})!`);
-        } else {
-          const errMsg = document.getElementById('auth-err-msg');
-          errMsg.textContent = '❌ ' + (data.message || 'Authentication Failed');
-          errMsg.style.display = 'block';
-        }
-      } catch (err) {
-        alert('Authentication error: ' + err.message);
-      }
-    }
-
-    function updateAuthUI() {
-      const topBadge = document.getElementById('top-clearance-badge');
-      const topPulse = document.getElementById('top-pulse-dot');
-      const roleText = document.getElementById('role-display-text');
-      const authBanner = document.getElementById('auth-officer-banner');
-      const lockBanner = document.getElementById('auth-lock-banner');
-      const chatInput = document.getElementById('chat-input');
-      const btnSend = document.getElementById('btn-send');
-
-      if (currentAuthSession && currentAuthSession.authenticated) {
-        const lvl = currentAuthSession.clearance_level;
-        topBadge.className = 'badge-clearance badge-lvl' + lvl;
-        topPulse.className = 'pulse-dot emerald';
-        roleText.textContent = `AIR-GAPPED // ${currentAuthSession.name.toUpperCase()} (LEVEL-${lvl})`;
-
-        authBanner.style.display = 'flex';
-        lockBanner.style.display = 'none';
-        document.getElementById('officer-name').textContent = currentAuthSession.name;
-        document.getElementById('officer-id').textContent = `(${currentAuthSession.user_id})`;
-        document.getElementById('officer-dept').textContent = `${currentAuthSession.designation} • ${currentAuthSession.department}`;
-        document.getElementById('officer-lvl-tag').className = 'badge-tag badge-lvl' + lvl;
-        document.getElementById('officer-lvl-tag').textContent = `LEVEL-${lvl}`;
-
-        chatInput.disabled = false;
-        chatInput.placeholder = `Query knowledge base as ${currentAuthSession.name} (Clearance Level ${lvl})...`;
-        btnSend.disabled = false;
-      } else {
-        topBadge.className = 'badge-clearance badge-lvl1';
-        topPulse.className = 'pulse-dot magenta';
-        roleText.textContent = 'AIR-GAPPED // ACCESS LOCKED (UNAUTHENTICATED)';
-
-        authBanner.style.display = 'none';
-        lockBanner.style.display = 'block';
-
-        chatInput.disabled = true;
-        chatInput.placeholder = '🔒 Authentication required. Click "AUTHENTICATE NOW" above...';
-        btnSend.disabled = true;
-      }
-    }
+    roleSelect.addEventListener('change', (e) => {
+      currentClearance = parseInt(e.target.value);
+      const conf = ROLE_CONFIGS[currentClearance];
+      topClearanceBadge.className = 'badge-clearance ' + conf.badgeClass;
+      roleDisplayText.textContent = 'AIR-GAPPED // ' + conf.name;
+    });
 
     // Chat Execution
     const chatInput = document.getElementById('chat-input');
@@ -1197,11 +903,6 @@ UI_HTML = r"""<!DOCTYPE html>
     const sourcesCount = document.getElementById('sources-count');
 
     async function sendQuery(queryText) {
-      if (!currentAuthSession || !currentAuthSession.authenticated) {
-        openAuthModal();
-        return;
-      }
-
       const query = queryText || chatInput.value.trim();
       if (!query) return;
 
@@ -1214,20 +915,8 @@ UI_HTML = r"""<!DOCTYPE html>
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            query: query, 
-            auth_token: currentAuthSession.session_token,
-            personnel_id: currentAuthSession.user_id,
-            clearance_level: currentAuthSession.clearance_level 
-          })
+          body: JSON.stringify({ query: query, clearance_level: currentClearance })
         });
-
-        if (res.status === 401) {
-          appendMessage('assistant', '🔒 <b>Access Denied:</b> Authentication required. Please log in with valid credentials.');
-          currentAuthSession.authenticated = false;
-          updateAuthUI();
-          return;
-        }
 
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
@@ -1265,18 +954,19 @@ UI_HTML = r"""<!DOCTYPE html>
 
     function renderAssistantResponse(data) {
       const sources = data.sources || [];
+      const verdict = data.verdict || 'AUTHORIZED';
       const redactionOccurred = data.redaction_occurred;
 
       let html = `<div style="margin-bottom: 8px;">`;
       if (redactionOccurred) {
-        html += `<span class="badge-tag badge-lvl4" style="margin-bottom: 6px; display: inline-block;">⚠️ SENSITIVE SECRETS REDACTED (CLEARANCE LEVEL RESTRICTED)</span><br>`;
+        html += `<span class="badge-tag badge-lvl4" style="margin-bottom: 6px; display: inline-block;">⚠️ SENSITIVE SECRETS REDACTED (CLEARANCE RESTRICTED)</span><br>`;
       } else {
-        html += `<span class="badge-tag badge-lvl2" style="margin-bottom: 6px; display: inline-block;">✅ VERIFIED SOVEREIGN KNOWLEDGE RETRIEVAL</span><br>`;
+        html += `<span class="badge-tag badge-lvl2" style="margin-bottom: 6px; display: inline-block;">✅ VERIFIED KNOWLEDGE RETRIEVAL</span><br>`;
       }
       html += `</div>`;
 
       if (sources.length === 0) {
-        html += `<p>No matching records found in Sovereign Vault for this query.</p>`;
+        html += `<p>No relevant documents found in the Sovereign Knowledge Vault for this query.</p>`;
       } else {
         sources.forEach((src, idx) => {
           let text = src.text
@@ -1286,7 +976,7 @@ UI_HTML = r"""<!DOCTYPE html>
             .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
             .replace(/`([^`]+)`/g, '<code style="background:rgba(0,240,255,0.08);color:var(--color-cyan);padding:2px 4px;border-radius:3px;">$1</code>');
 
-          html += `<div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px;">
+          html += `<div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <span style="font-weight:700; color:#fff; font-size:0.85rem;">[${idx+1}] ${src.title}</span>
               <span class="badge-tag badge-lvl${src.clearance_level}">LEVEL-${src.clearance_level}</span>
@@ -1330,20 +1020,21 @@ UI_HTML = r"""<!DOCTYPE html>
 
       el.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Step 1: Query Analysis -->
           <div class="source-card">
-            <div style="color: var(--color-cyan); font-weight: 700; margin-bottom: 6px;">STEP 1: IDENTITY &amp; CLEARANCE VERIFICATION</div>
+            <div style="color: var(--color-cyan); font-weight: 700; margin-bottom: 6px;">STEP 1: QUERY PARSING &amp; ROLE AUTHORIZATION</div>
             <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
-              • Authenticated Officer: <b style="color:#fff;">${currentAuthSession.name}</b> (${currentAuthSession.user_id})<br>
-              • Clearance Level: <b style="color:var(--color-cyan);">${currentAuthSession.clearance_level}</b> &bull; Department: ${currentAuthSession.department}<br>
+              • User Clearance: <b style="color:#fff;">${trace.query_analysis?.user_clearance || currentClearance}</b> (${trace.query_analysis?.role_name || 'Active Role'})<br>
               • Query Tokens: <span style="color:var(--color-cyan);">${(trace.query_analysis?.tokens || []).join(', ')}</span>
             </div>
           </div>
 
+          <!-- Step 2: Vector Search -->
           <div class="source-card">
             <div style="color: var(--color-cyan); font-weight: 700; margin-bottom: 6px;">STEP 2: HYBRID VECTOR SEARCH (DENSE + BM25)</div>
             <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
               • Top-K Chunks Retrieved: <b>${trace.vector_search?.top_k_retrieved || 0}</b><br>
-              • Match Breakdown:
+              • Vector Match Breakdown:
               <ul style="margin-left: 20px; margin-top: 4px;">
                 ${(trace.vector_search?.sources || []).map(s => `
                   <li>[${s.chunk_id}] <b>${s.title}</b> &rarr; Hybrid: <span style="color:var(--color-cyan);">${s.hybrid_score}</span> | Dense: ${s.dense_score} | Lexical: ${s.lexical_score}</li>
@@ -1352,10 +1043,11 @@ UI_HTML = r"""<!DOCTYPE html>
             </div>
           </div>
 
+          <!-- Step 3: RBAC Redaction -->
           <div class="source-card">
             <div style="color: var(--color-cyan); font-weight: 700; margin-bottom: 6px;">STEP 3: RBAC ENFORCEMENT &amp; DYNAMIC REDACTION</div>
             <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
-              • Authorized Chunks: <b style="color:var(--color-emerald);">${trace.rbac_evaluation?.access_granted_chunks || 0}</b><br>
+              • Granted Chunks: <b style="color:var(--color-emerald);">${trace.rbac_evaluation?.access_granted_chunks || 0}</b><br>
               • Redacted Chunks: <b style="color:var(--color-magenta);">${trace.rbac_evaluation?.redacted_chunks || 0}</b><br>
               • Pipeline Verdict: <b style="color:#fff;">${trace.rbac_evaluation?.verdict || 'AUTHORIZED'}</b>
             </div>
@@ -1364,196 +1056,15 @@ UI_HTML = r"""<!DOCTYPE html>
       `;
     }
 
-    // ====================================================================
-    // DATASET LOADER & IMPORTER
-    // ====================================================================
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const csvTextInput = document.getElementById('csv-text-input');
-    const btnDownloadTemplate = document.getElementById('btn-download-template');
-    const btnIngestDataset = document.getElementById('btn-ingest-dataset');
-    const previewRowCount = document.getElementById('preview-row-count');
-    const previewTableHead = document.getElementById('preview-table-head');
-    const previewTableBody = document.getElementById('preview-table-body');
-    const importTelemetryBox = document.getElementById('import-telemetry-box');
-
-    async function loadIndianSampleDataset(datasetType) {
-      try {
-        const res = await fetch('/api/datasets/sample?name=' + datasetType);
-        const data = await res.json();
-        if (data.csv) {
-          csvTextInput.value = data.csv;
-          const rows = parseCSVText(data.csv);
-          renderTabularPreview(rows);
-          alert(`🇮🇳 Loaded ${data.title} (${rows.length} records ready to ingest)!`);
-        }
-      } catch (err) {
-        alert('Failed to load sample dataset: ' + err.message);
-      }
-    }
-
-    function parseCSVText(csvText) {
-      const lines = csvText.trim().split(/\r\n|\n/).filter(l => l.trim().length > 0);
-      if (lines.length < 2) return [];
-
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
-      const rows = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        const values = [];
-        let inQuote = false;
-        let curVal = '';
-
-        for (let j = 0; j < line.length; j++) {
-          const char = line[j];
-          if (char === '"' || char === "'") {
-            inQuote = !inQuote;
-          } else if (char === ',' && !inQuote) {
-            values.push(curVal.trim().replace(/^["']|["']$/g, ''));
-            curVal = '';
-          } else {
-            curVal += char;
-          }
-        }
-        values.push(curVal.trim().replace(/^["']|["']$/g, ''));
-
-        if (values.length === headers.length) {
-          const rowObj = {};
-          headers.forEach((h, idx) => { rowObj[h] = values[idx]; });
-          rows.push(rowObj);
-        }
-      }
-      return rows;
-    }
-
-    function renderTabularPreview(rows) {
-      parsedDatasetRows = rows;
-      previewRowCount.textContent = rows.length + ' ROWS READY';
-
-      if (rows.length === 0) {
-        previewTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 40px 0;">No data loaded.</td></tr>`;
-        return;
-      }
-
-      const keys = Object.keys(rows[0]);
-      previewTableHead.innerHTML = `<tr>${keys.map(k => `<th>${k.toUpperCase()}</th>`).join('')}</tr>`;
-
-      previewTableBody.innerHTML = rows.slice(0, 15).map(r => `
-        <tr>
-          ${keys.map((k, idx) => {
-            let val = r[k] || '';
-            if (idx === 0) return `<td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-cyan);">${val}</td>`;
-            if (k.toLowerCase().includes('clearance')) return `<td><span class="badge-tag badge-lvl${val}">LVL-${val}</span></td>`;
-            if (k.toLowerCase().includes('passcode') || k.toLowerCase().includes('secret') || k.toLowerCase().includes('token')) {
-              return `<td style="font-family:var(--font-mono); color:var(--color-amber);">•••••••• (${val.substring(0,3)}...)</td>`;
-            }
-            return `<td>${val}</td>`;
-          }).join('')}
-        </tr>
-      `).join('');
-    }
-
-    if (dropZone) {
-      dropZone.addEventListener('click', () => fileInput.click());
-      dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--color-cyan)'; });
-      dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border-subtle)'; });
-      dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.style.borderColor = 'var(--border-subtle)';
-        if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
-      });
-    }
-
-    if (fileInput) {
-      fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) handleFile(e.target.files[0]);
-      });
-    }
-
-    function handleFile(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target.result;
-        csvTextInput.value = text;
-        const rows = parseCSVText(text);
-        renderTabularPreview(rows);
-      };
-      reader.readAsText(file);
-    }
-
-    if (csvTextInput) {
-      csvTextInput.addEventListener('input', () => {
-        const rows = parseCSVText(csvTextInput.value);
-        renderTabularPreview(rows);
-      });
-    }
-
-    if (btnDownloadTemplate) {
-      btnDownloadTemplate.addEventListener('click', async () => {
-        const res = await fetch('/api/datasets/sample?name=cyber');
-        const data = await res.json();
-        const blob = new Blob([data.csv || ''], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'indian_sovereign_dataset_template.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
-    }
-
-    if (btnIngestDataset) {
-      btnIngestDataset.addEventListener('click', async () => {
-        const csvRaw = csvTextInput.value.trim();
-        if (!csvRaw && parsedDatasetRows.length === 0) {
-          alert('Please upload a CSV/Excel file or load a sample dataset first.');
-          return;
-        }
-
-        btnIngestDataset.disabled = true;
-        btnIngestDataset.textContent = '⏳ INGESTING & RE-INDEXING...';
-
-        try {
-          const res = await fetch('/api/upload-dataset', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              rows: parsedDatasetRows.length > 0 ? parsedDatasetRows : null,
-              csv_text: parsedDatasetRows.length === 0 ? csvRaw : null
-            })
-          });
-
-          const data = await res.json();
-          if (data.status === 'success') {
-            importTelemetryBox.style.display = 'block';
-            importTelemetryBox.innerHTML = `
-              <b>✅ DATASET INGESTION &amp; CREDENTIAL SYNC COMPLETE!</b><br>
-              • Ingested <b>${data.added_count}</b> new records into Sovereign Vault.<br>
-              • Registered <b>${data.registered_officers || data.added_count}</b> new personnel credentials in Authentication Gate.<br>
-              • Vector Space Re-Indexed: <b>${data.total_documents} total documents</b> across <b>${data.total_chunks} semantic chunks</b>.<br>
-              • Switch to the <b>💬 Sovereign Chatbot</b> tab to query the newly ingested records!
-            `;
-            loadKnowledgeBase();
-            alert(`🎉 Success! ${data.added_count} records indexed and credentials synced. You can now query and authenticate with them!`);
-          } else {
-            alert('Ingestion error: ' + (data.message || 'Unknown error'));
-          }
-        } catch (err) {
-          alert('Failed to connect to Sovereign RAG server: ' + err.message);
-        } finally {
-          btnIngestDataset.disabled = false;
-          btnIngestDataset.textContent = '🚀 INGEST & RE-INDEX VECTOR SPACE';
-        }
-      });
-    }
-
     // Knowledge Base Management
     async function loadKnowledgeBase() {
       try {
         const res = await fetch('/api/knowledge');
         const docs = await res.json();
         cachedVaultDocs = docs;
+        
+        // Cache locally for phone offline support
+        try { localStorage.setItem('sovereign_cached_docs', JSON.stringify(docs)); } catch(e){}
 
         document.getElementById('vault-doc-count').textContent = docs.length + ' DOCUMENTS';
         const tbody = document.getElementById('vault-table-body');
@@ -1578,6 +1089,13 @@ UI_HTML = r"""<!DOCTYPE html>
         `).join('');
       } catch (err) {
         console.error('Failed to load KB:', err);
+        // Fallback to offline localStorage on phone
+        try {
+          const cached = JSON.parse(localStorage.getItem('sovereign_cached_docs') || '[]');
+          if (cached.length > 0) {
+            document.getElementById('vault-doc-count').textContent = cached.length + ' DOCUMENTS (OFFLINE CACHE)';
+          }
+        } catch(e){}
       }
     }
 
@@ -1632,8 +1150,8 @@ UI_HTML = r"""<!DOCTYPE html>
           return `
             <tr>
               <td style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);">${dateStr}</td>
-              <td style="color: var(--color-cyan); font-family: var(--font-mono); font-size: 0.78rem;">${l.officer_id || 'OFFICER'} (LVL-${l.user_clearance})</td>
               <td style="color: #fff; font-weight: 600;">${l.query}</td>
+              <td><span class="badge-tag badge-lvl${l.user_clearance}">LVL-${l.user_clearance}</span></td>
               <td><span style="font-family: var(--font-mono); font-size: 0.75rem; color: ${l.redaction_occurred ? 'var(--color-magenta)' : 'var(--color-emerald)'}">${l.verdict}</span></td>
               <td style="font-family: var(--font-mono); font-size: 0.75rem;">${(l.retrieved_docs || []).join(', ')}</td>
               <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-cyan);">${l.latency_ms}ms</td>
@@ -1645,7 +1163,197 @@ UI_HTML = r"""<!DOCTYPE html>
       }
     }
 
-    // Phone Modal Handlers
+    // ====================================================================
+    // CSV / EXCEL DATASET IMPORTER LOGIC
+    // ====================================================================
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const csvTextInput = document.getElementById('csv-text-input');
+    const btnLoadSample = document.getElementById('btn-load-sample');
+    const btnDownloadTemplate = document.getElementById('btn-download-template');
+    const btnIngestDataset = document.getElementById('btn-ingest-dataset');
+    const previewRowCount = document.getElementById('preview-row-count');
+    const previewTableHead = document.getElementById('preview-table-head');
+    const previewTableBody = document.getElementById('preview-table-body');
+    const importTelemetryBox = document.getElementById('import-telemetry-box');
+
+    let parsedDatasetRows = [];
+
+    const SAMPLE_CSV = `id,name,role,department,location,clearance,access_token
+EMP-201,Ajay Kumar Verma,Continuous Miner Operator,Longwall Extraction Section,East Drift Shaft,2,JOY-PILOT-201
+EMP-202,Pooja Soren,Strata Geotechnical Inspector,Underground Stability District,Panel-C Dip,3,DGMS-GEO-994
+EMP-203,Deepak Sundaram,Substation FLP Electrician,High Voltage Distribution Hub,Winding Pit #1,3,FLP-ELEC-401
+EMP-204,Nisha Ganguly,Underground Gas Testing Analyst,Mine Safety & Ventilation,Shaft #4 Return,3,LAB-GAS-204
+EMP-205,Rajendra Murmu,Heavy Dragline Class-1 Operator,Opencast Overburden Bench,Zone Bravo,2,DRAG-771
+EMP-206,Sanjay Biswas,Mine Rescue Team Captain,Central Emergency Rescue Post,Surface HQ,4,RESCUE-CMD-900`;
+
+    function parseCSVText(csvText) {
+      const lines = csvText.trim().split(/\r\n|\n/).filter(l => l.trim().length > 0);
+      if (lines.length < 2) return [];
+
+      // Split header
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        const values = [];
+        let inQuote = false;
+        let curVal = '';
+
+        for (let j = 0; j < line.length; j++) {
+          const char = line[j];
+          if (char === '"' || char === "'") {
+            inQuote = !inQuote;
+          } else if (char === ',' && !inQuote) {
+            values.push(curVal.trim().replace(/^["']|["']$/g, ''));
+            curVal = '';
+          } else {
+            curVal += char;
+          }
+        }
+        values.push(curVal.trim().replace(/^["']|["']$/g, ''));
+
+        if (values.length === headers.length) {
+          const rowObj = {};
+          headers.forEach((h, idx) => {
+            rowObj[h] = values[idx];
+          });
+          rows.push(rowObj);
+        }
+      }
+      return rows;
+    }
+
+    function renderTabularPreview(rows) {
+      parsedDatasetRows = rows;
+      previewRowCount.textContent = rows.length + ' ROWS READY';
+
+      if (rows.length === 0) {
+        previewTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 40px 0;">No data loaded.</td></tr>`;
+        return;
+      }
+
+      const keys = Object.keys(rows[0]);
+      
+      // Dynamic Headers
+      previewTableHead.innerHTML = `<tr>${keys.map(k => `<th>${k.toUpperCase()}</th>`).join('')}</tr>`;
+
+      // Render Rows
+      previewTableBody.innerHTML = rows.slice(0, 15).map(r => `
+        <tr>
+          ${keys.map((k, idx) => {
+            const val = r[k] || '';
+            if (idx === 0) return `<td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-cyan);">${val}</td>`;
+            if (k.toLowerCase().includes('clearance')) return `<td><span class="badge-tag badge-lvl${val}">LVL-${val}</span></td>`;
+            return `<td>${val}</td>`;
+          }).join('')}
+        </tr>
+      `).join('');
+    }
+
+    if (dropZone) {
+      dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--color-cyan)'; });
+      dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border-subtle)'; });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-subtle)';
+        if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+      });
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFile(e.target.files[0]);
+      });
+    }
+
+    function handleFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        csvTextInput.value = text;
+        const rows = parseCSVText(text);
+        renderTabularPreview(rows);
+      };
+      reader.readAsText(file);
+    }
+
+    if (csvTextInput) {
+      csvTextInput.addEventListener('input', () => {
+        const rows = parseCSVText(csvTextInput.value);
+        renderTabularPreview(rows);
+      });
+    }
+
+    if (btnLoadSample) {
+      btnLoadSample.addEventListener('click', () => {
+        csvTextInput.value = SAMPLE_CSV;
+        const rows = parseCSVText(SAMPLE_CSV);
+        renderTabularPreview(rows);
+      });
+    }
+
+    if (btnDownloadTemplate) {
+      btnDownloadTemplate.addEventListener('click', () => {
+        const blob = new Blob([SAMPLE_CSV], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'enterprise_dataset_template.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    if (btnIngestDataset) {
+      btnIngestDataset.addEventListener('click', async () => {
+        const csvRaw = csvTextInput.value.trim();
+        if (!csvRaw && parsedDatasetRows.length === 0) {
+          alert('Please upload a CSV/Excel file or paste CSV text first.');
+          return;
+        }
+
+        btnIngestDataset.disabled = true;
+        btnIngestDataset.textContent = '⏳ INGESTING & RE-INDEXING...';
+
+        try {
+          const res = await fetch('/api/upload-dataset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              rows: parsedDatasetRows.length > 0 ? parsedDatasetRows : null,
+              csv_text: parsedDatasetRows.length === 0 ? csvRaw : null
+            })
+          });
+
+          const data = await res.json();
+          if (data.status === 'success') {
+            importTelemetryBox.style.display = 'block';
+            importTelemetryBox.innerHTML = `
+              <b>✅ DATASET INGESTION COMPLETE!</b><br>
+              • Ingested <b>${data.added_count}</b> new records into Sovereign Vault.<br>
+              • Vector Space Re-Indexed: <b>${data.total_documents} total documents</b> across <b>${data.total_chunks} semantic chunks</b>.<br>
+              • You can now query any of these newly uploaded records in the <b>💬 Sovereign Chatbot</b> tab!
+            `;
+            loadKnowledgeBase();
+            alert(`🎉 Success! ${data.added_count} records indexed into hybrid vector space. Switch to the Chatbot tab to query them!`);
+          } else {
+            alert('Ingestion error: ' + (data.message || 'Unknown error'));
+          }
+        } catch (err) {
+          alert('Failed to connect to Sovereign RAG server: ' + err.message);
+        } finally {
+          btnIngestDataset.disabled = false;
+          btnIngestDataset.textContent = '🚀 INGEST & RE-INDEX VECTOR SPACE';
+        }
+      });
+    }
+
+    // ====================================================================
+    // PHONE & OFFLINE ACCESS MODAL LOGIC
+    // ====================================================================
     const btnOpenPhoneModal = document.getElementById('btn-phone-modal');
     const btnClosePhoneModal = document.getElementById('btn-close-phone-modal');
     const phoneModal = document.getElementById('phone-modal');
@@ -1658,6 +1366,7 @@ UI_HTML = r"""<!DOCTYPE html>
         const res = await fetch('/api/network-info');
         const data = await res.json();
         if (data.phone_url) {
+          mobileAccessUrl = data.phone_url;
           phoneUrlDisplay.textContent = data.phone_url;
         }
         if (data.qr_svg) {
@@ -1696,11 +1405,9 @@ UI_HTML = r"""<!DOCTYPE html>
       });
     }
 
-    // Initial Startup Load
-    updateAuthUI();
+    // Initial Load
     loadKnowledgeBase();
     loadNetworkInfo();
-    loadIndianSampleDataset('cyber');
   </script>
 </body>
 </html>
@@ -1710,9 +1417,8 @@ UI_HTML = r"""<!DOCTYPE html>
 class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
     """
     Pure Python HTTP REST API and UI Server.
-    Handles static single-page UI, PWA assets, QR generation, Auth verification, and JSON REST endpoints.
+    Handles static single-page UI, PWA assets, QR generation, and JSON REST endpoints with zero external dependencies.
     """
-    protocol_version = "HTTP/1.1"
 
     def _send_json(self, data: Any, status_code: int = 200):
         body = json.dumps(data, indent=2, ensure_ascii=False).encode('utf-8')
@@ -1721,10 +1427,9 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
         self.send_header('Content-Length', str(len(body)))
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
         self.wfile.write(body)
-        self.wfile.flush()
 
     def _send_html(self, html_content: str):
         body = html_content.encode('utf-8')
@@ -1734,7 +1439,6 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         self.end_headers()
         self.wfile.write(body)
-        self.wfile.flush()
 
     def _send_text(self, text_content: str, content_type: str = 'application/javascript'):
         body = text_content.encode('utf-8')
@@ -1744,116 +1448,86 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         self.end_headers()
         self.wfile.write(body)
-        self.wfile.flush()
-
 
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
     def do_GET(self):
-        try:
-            parsed = urllib.parse.urlparse(self.path)
-            path = parsed.path
-            query_params = urllib.parse.parse_qs(parsed.query)
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path
+        query_params = urllib.parse.parse_qs(parsed.query)
 
-            # 1. Main Web UI
-            if path == '/' or path == '/index.html':
-                self._send_html(UI_HTML)
-                return
+        # 1. Main Web UI
+        if path == '/' or path == '/index.html':
+            self._send_html(UI_HTML)
+            return
 
-            # 2. PWA Web App Manifest
-            elif path == '/manifest.json':
-                self._send_json(PWA_MANIFEST)
-                return
+        # 2. PWA Web App Manifest
+        elif path == '/manifest.json':
+            self._send_json(PWA_MANIFEST)
+            return
 
-            # 3. PWA Service Worker
-            elif path == '/sw.js':
-                self._send_text(SERVICE_WORKER_JS, 'application/javascript')
-                return
+        # 3. PWA Service Worker
+        elif path == '/sw.js':
+            self._send_text(SERVICE_WORKER_JS, 'application/javascript')
+            return
 
-            # 4. App Icon SVG
-            elif path == '/api/icon.svg':
-                self._send_text(APP_ICON_SVG, 'image/svg+xml')
-                return
+        # 4. App Icon SVG
+        elif path == '/api/icon.svg':
+            self._send_text(APP_ICON_SVG, 'image/svg+xml')
+            return
 
-            # 5. REST API: Local Network Info & Phone Link
-            elif path == '/api/network-info':
-                local_ip = get_local_lan_ip()
-                phone_url = f"http://{local_ip}:{PORT}"
-                qr_svg = generate_qr_svg(phone_url, size_px=180, fg_color="#00f0ff", bg_color="#0a0e1a")
-                self._send_json({
-                    "localhost": f"http://localhost:{PORT}",
-                    "lan_ip": local_ip,
-                    "phone_url": phone_url,
-                    "port": PORT,
-                    "qr_svg": qr_svg
-                })
-                return
+        # 5. REST API: Local Network Info & Phone Link
+        elif path == '/api/network-info':
+            local_ip = get_local_lan_ip()
+            phone_url = f"http://{local_ip}:{PORT}"
+            qr_svg = generate_qr_svg(phone_url, size_px=180, fg_color="#00f0ff", bg_color="#0a0e1a")
+            self._send_json({
+                "localhost": f"http://localhost:{PORT}",
+                "lan_ip": local_ip,
+                "phone_url": phone_url,
+                "port": PORT,
+                "qr_svg": qr_svg
+            })
+            return
 
-            # 6. REST API: Sample Indian Sovereign Datasets
-            elif path == '/api/datasets/sample':
-                dataset_name = query_params.get('name', ['cyber'])[0].lower()
-                if dataset_name == 'infra':
-                    self._send_json({
-                        "name": "infra",
-                        "title": "National Critical Infrastructure & PSU Assets",
-                        "csv": INDIAN_CRITICAL_INFRA_DATASET_CSV
-                    })
-                elif dataset_name == 'banking':
-                    self._send_json({
-                        "name": "banking",
-                        "title": "Indian Banking & Payment Switch Hub (NPCI / RBI / Aadhaar)",
-                        "csv": INDIAN_BANKING_NPCI_DATASET_CSV
-                    })
-                else:
-                    self._send_json({
-                        "name": "cyber",
-                        "title": "National Cyber Defense & NIC Cloud Registry (MeghRaj / CERT-In)",
-                        "csv": INDIAN_CYBER_NIC_DATASET_CSV
-                    })
-                return
+        # 6. REST API: Dynamic QR Code Generator (Pure SVG)
+        elif path == '/api/qr':
+            target_text = query_params.get('text', [f"http://{get_local_lan_ip()}:{PORT}"])[0]
+            qr_svg = generate_qr_svg(target_text, size_px=220, fg_color="#00f0ff", bg_color="#0a0e1a")
+            self._send_text(qr_svg, 'image/svg+xml')
+            return
 
-            # 7. REST API: Sample Indian Officer Profiles
-            elif path == '/api/auth/profiles':
-                profiles = auth_manager.get_sample_officer_profiles()
-                self._send_json(profiles)
-                return
+        # 7. REST API: Knowledge Base
+        elif path == '/api/knowledge':
+            docs = vault_manager.get_all_documents()
+            self._send_json(docs)
+            return
 
-            # 8. REST API: Knowledge Base
-            elif path == '/api/knowledge':
-                docs = vault_manager.get_all_documents()
-                self._send_json(docs)
-                return
+        # 8. REST API: Audit Logs
+        elif path == '/api/audit':
+            logs = rag_engine.get_audit_logs()
+            self._send_json(logs)
+            return
 
-            # 9. REST API: Audit Logs
-            elif path == '/api/audit':
-                logs = rag_engine.get_audit_logs()
-                self._send_json(logs)
-                return
+        # 9. REST API: Stats
+        elif path == '/api/stats':
+            stats = vault_manager.get_stats()
+            stats["total_indexed_chunks"] = len(vector_engine.chunks)
+            self._send_json(stats)
+            return
 
-            # 10. REST API: Stats
-            elif path == '/api/stats':
-                stats = vault_manager.get_stats()
-                stats["total_indexed_chunks"] = len(vector_engine.chunks)
-                self._send_json(stats)
-                return
+        # 10. REST API: Clearance Levels Metadata
+        elif path == '/api/clearance-levels':
+            self._send_json(CLEARANCE_LEVELS)
+            return
 
-            # 11. REST API: Clearance Levels Metadata
-            elif path == '/api/clearance-levels':
-                self._send_json(CLEARANCE_LEVELS)
-                return
-
-            else:
-                self.send_error(404, "Endpoint not found")
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            self._send_json({"status": "error", "message": str(e)}, 500)
-
+        else:
+            self.send_error(404, "Endpoint not found")
 
     def do_POST(self):
         try:
@@ -1868,48 +1542,15 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
             except Exception:
                 payload = {}
 
-            # 1. Credential Login & Identity Verification Endpoint
-            if path == '/api/auth/login':
-                personnel_id = payload.get('personnel_id', '')
-                passcode = payload.get('passcode', '')
-                auth_res = auth_manager.authenticate(personnel_id, passcode)
-                if auth_res["authenticated"]:
-                    self._send_json(auth_res, 200)
-                else:
-                    self._send_json(auth_res, 401)
-                return
-
-            # 2. Chat & RAG Query Endpoint (Enforces Credential Gate)
-            elif path == '/api/chat':
+            # 1. Chat & RAG Query Endpoint
+            if path == '/api/chat':
                 query_str = payload.get('query', '')
-                auth_token = payload.get('auth_token', '')
-                personnel_id = payload.get('personnel_id', '')
-                
-                # Verify active credentials
-                session = auth_manager.validate_session(auth_token or personnel_id)
-                if not session:
-                    # Reject unauthenticated chat requests
-                    self._send_json({
-                        "error": "CREDENTIALS_REQUIRED",
-                        "status": "UNAUTHENTICATED",
-                        "message": "🔒 Access Denied: Valid Personnel ID and Security Passcode required to query Sovereign Vault."
-                    }, 401)
-                    return
-
-                # Authenticated: execute RAG query with officer's verified clearance
-                clearance_lvl = session.get('clearance_level', 1)
+                clearance_lvl = int(payload.get('clearance_level', 1))
                 result = rag_engine.query(user_query=query_str, user_clearance=clearance_lvl, top_k=4)
-                
-                # Tag officer details in audit trace
-                if "trace" in result and "query_analysis" in result["trace"]:
-                    result["trace"]["query_analysis"]["officer_id"] = session.get("user_id")
-                    result["trace"]["query_analysis"]["officer_name"] = session.get("name")
-                    result["trace"]["query_analysis"]["department"] = session.get("department")
-
                 self._send_json(result)
                 return
 
-            # 3. Add New Knowledge Entry
+            # 2. Add New Knowledge Entry
             elif path == '/api/knowledge':
                 title = payload.get('title', 'Untitled Document')
                 category = payload.get('category', 'General')
@@ -1921,11 +1562,12 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
                     clearance_level=clearance_lvl,
                     content=content
                 )
+                # Re-index in vector store
                 rag_engine.reindex_knowledge_base()
                 self._send_json({"status": "success", "doc": doc})
                 return
 
-            # 4. Re-index Vector Space
+            # 3. Re-index Vector Space
             elif path == '/api/reindex':
                 rag_engine.reindex_knowledge_base()
                 self._send_json({
@@ -1935,24 +1577,24 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
                 })
                 return
 
-            # 5. Upload CSV / Excel Dataset Endpoint (Syncs with Vault & Auth Registry)
+            # 4. Upload CSV / Excel Dataset Endpoint
             elif path == '/api/upload-dataset':
                 rows = payload.get('rows', [])
                 csv_text = payload.get('csv_text', '')
                 
                 if csv_text and not rows:
+                    import csv
+                    import io
                     f = io.StringIO(csv_text.strip())
                     reader = csv.DictReader(f)
                     rows = [r for r in reader]
                     
                 if rows:
                     added = vault_manager.ingest_tabular_rows(rows)
-                    reg_count = auth_manager.register_users_from_tabular_rows(rows)
                     rag_engine.reindex_knowledge_base()
                     self._send_json({
                         "status": "success",
                         "added_count": len(added),
-                        "registered_officers": reg_count,
                         "total_documents": len(vault_manager.documents),
                         "total_chunks": len(vector_engine.chunks),
                         "sample_doc": added[0] if added else None
@@ -1984,53 +1626,69 @@ class SovereignRAGHTTPHandler(http.server.BaseHTTPRequestHandler):
         else:
             self.send_error(404, "Endpoint not found")
 
-    def address_string(self):
-        # Prevent slow or hanging reverse DNS lookups in offline/air-gapped networks!
-        try:
-            return self.client_address[0]
-        except Exception:
-            return "127.0.0.1"
-
     def log_message(self, format, *args):
-        try:
-            sys.stdout.write(f"[Sovereign HTTP] {self.address_string()} - [{self.log_date_time_string()}] {format%args}\n")
-            sys.stdout.flush()
-        except Exception:
-            pass
+        # Clean logging
+        sys.stdout.write(f"[Sovereign HTTP] {self.address_string()} - [{self.log_date_time_string()}] {format%args}\n")
+        sys.stdout.flush()
 
+
+class ThreadedSovereignServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    # Multiple listeners on the same port (Windows + SO_REUSEADDR) drop connections silently.
+    allow_reuse_address = False
+    daemon_threads = True
+    request_queue_size = 64
+
+
+def _port_is_free(host: str, port: int) -> bool:
+    """True if nothing is listening on host:port (exclusive bind probe)."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        try:
+            probe.bind((host, port))
+            return True
+        except OSError:
+            return False
 
 
 def run_app():
     global PORT
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     local_ip = get_local_lan_ip()
-    
+
+    bind_host = "0.0.0.0"
+    chosen_port: Optional[int] = None
+    for attempt_port in range(PORT, PORT + 50):
+        if _port_is_free(bind_host, attempt_port):
+            chosen_port = attempt_port
+            break
+
+    if chosen_port is None:
+        print("[Sovereign HTTP] ERROR: No free TCP port in range "
+              f"{PORT}–{PORT + 49}. Stop other python app.py/server.py instances and retry.")
+        sys.exit(1)
+
+    PORT = chosen_port
+
     print("===============================================================================")
-    print("  SOVEREIGN RAG // INDIAN ENTERPRISE & DEFENSE SUITE ACTIVE")
+    print("  SOVEREIGN RAG // OFFLINE MOBILE & DESKTOP SUITE ACTIVE")
     print(f"  Indexed Documents: {len(vault_manager.documents)}")
     print(f"  Indexed Semantic Chunks: {len(vector_engine.chunks)}")
-    print(f"  Registered Personnel Credentials: {len(auth_manager.users)}")
     print("===============================================================================")
     print(f"  --> COMPUTER (LOCALHOST):    http://localhost:{PORT}")
     print(f"  --> PHONE / LAN ACCESS:      http://{local_ip}:{PORT}")
-    print(f"  --> CREDENTIAL GATE:         Personnel Authentication Active")
+    print(f"  --> OFFLINE MOBILE SUITE:    Connect phone to same Wi-Fi / Hotspot")
+    if PORT != 8000:
+        print(f"  (Port 8000 was busy - using {PORT} instead.)")
     print("===============================================================================")
     sys.stdout.flush()
 
-    for attempt_port in range(PORT, PORT + 50):
-        try:
-            http.server.ThreadingHTTPServer.allow_reuse_address = True
-            with http.server.ThreadingHTTPServer(("0.0.0.0", attempt_port), SovereignRAGHTTPHandler) as httpd:
-                PORT = attempt_port
-                bound_port = httpd.server_address[1]
-                print(f"  --> SERVER SUCCESSFULLY BOUND AND LISTENING ON PORT: {bound_port}")
-                sys.stdout.flush()
-                httpd.serve_forever()
-        except (OSError, PermissionError) as err:
-            continue
-
-
+    try:
+        with ThreadedSovereignServer((bind_host, PORT), SovereignRAGHTTPHandler) as httpd:
+            httpd.serve_forever()
+    except (OSError, PermissionError) as exc:
+        print(f"[Sovereign HTTP] Failed to bind {bind_host}:{PORT}: {exc}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
     run_app()
+

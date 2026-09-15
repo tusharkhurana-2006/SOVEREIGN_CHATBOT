@@ -1,11 +1,14 @@
 import urllib.request
 import json
-import time
+import os
 
-print("Testing Sovereign RAG Mobile & Offline Endpoints...")
+BASE_PORT = int(os.environ.get("SOVEREIGN_PORT", "8000"))
+BASE = f"http://127.0.0.1:{BASE_PORT}"
+
+print(f"Testing Sovereign RAG Mobile & Offline Endpoints ({BASE})...")
 
 # 1. Test UI root
-res_ui = urllib.request.urlopen("http://127.0.0.1:8000/")
+res_ui = urllib.request.urlopen(f"{BASE}/")
 assert res_ui.status == 200
 html = res_ui.read().decode('utf-8')
 assert "<title>SOVEREIGN RAG" in html
@@ -14,21 +17,21 @@ assert "btn-phone-modal" in html
 print("  [PASS] Root Web UI & Mobile Manifest tags: OK (200)")
 
 # 2. Test Manifest JSON
-res_mf = urllib.request.urlopen("http://127.0.0.1:8000/manifest.json")
+res_mf = urllib.request.urlopen(f"{BASE}/manifest.json")
 assert res_mf.status == 200
 manifest_data = json.loads(res_mf.read().decode('utf-8'))
 assert manifest_data["display"] == "standalone"
 print(f"  [PASS] PWA Manifest: OK (Name: {manifest_data['name']}, Display: {manifest_data['display']})")
 
 # 3. Test Service Worker
-res_sw = urllib.request.urlopen("http://127.0.0.1:8000/sw.js")
+res_sw = urllib.request.urlopen(f"{BASE}/sw.js")
 assert res_sw.status == 200
 sw_code = res_sw.read().decode('utf-8')
 assert "CACHE_NAME" in sw_code
 print("  [PASS] Offline Service Worker (sw.js): OK (200)")
 
 # 4. Test Network Info & Dynamic QR SVG
-res_net = urllib.request.urlopen("http://127.0.0.1:8000/api/network-info")
+res_net = urllib.request.urlopen(f"{BASE}/api/network-info")
 assert res_net.status == 200
 net_data = json.loads(res_net.read().decode('utf-8'))
 assert "phone_url" in net_data

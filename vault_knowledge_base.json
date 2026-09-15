@@ -1302,5 +1302,143 @@
     },
     "content": "# Structured Record: Record REC-1063\n\n### Record Attributes & Fields\n- **Personnel_ID:** `IND-INT-010`\n- **Officer_Name:** `Aarav Mehta`\n- **Designation:** `Junior Cloud Operations Trainee`\n- **Agency_Department:** `MeghRaj Developer Sandbox`\n- **Station_City:** `Noida`\n- **Clearance_Level:** `1`\n- **Assigned_Subsystem:** `Public Microservice Registry`\n- **Access_Token:** `DEV-SANDBOX-101`\n- **Emergency_Passcode:** `NDA-TRAIN-001`",
     "created_at": 1789474058.882849
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-201",
+    "title": "Longwall Extraction Section: Ajay Kumar Verma (EMP-201)",
+    "category": "Longwall Extraction Section",
+    "clearance_level": 2,
+    "metadata": {
+      "record_id": "EMP-201",
+      "title": "Ajay Kumar Verma",
+      "category": "Longwall Extraction Section",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Ajay Kumar Verma\n\n### Record Attributes & Fields\n- **id:** `EMP-201`\n- **name:** `Ajay Kumar Verma`\n- **role:** `Continuous Miner Operator`\n- **department:** `Longwall Extraction Section`\n- **location:** `East Drift Shaft`\n- **clearance:** `2`\n- **access_token:** `JOY-PILOT-201`",
+    "created_at": 1789484572.8868108
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-202",
+    "title": "Underground Stability District: Pooja Soren (EMP-202)",
+    "category": "Underground Stability District",
+    "clearance_level": 3,
+    "metadata": {
+      "record_id": "EMP-202",
+      "title": "Pooja Soren",
+      "category": "Underground Stability District",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Pooja Soren\n\n### Record Attributes & Fields\n- **id:** `EMP-202`\n- **name:** `Pooja Soren`\n- **role:** `Strata Geotechnical Inspector`\n- **department:** `Underground Stability District`\n- **location:** `Panel-C Dip`\n- **clearance:** `3`\n- **access_token:** `DGMS-GEO-994`",
+    "created_at": 1789484572.886856
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-203",
+    "title": "High Voltage Distribution Hub: Deepak Sundaram (EMP-203)",
+    "category": "High Voltage Distribution Hub",
+    "clearance_level": 3,
+    "metadata": {
+      "record_id": "EMP-203",
+      "title": "Deepak Sundaram",
+      "category": "High Voltage Distribution Hub",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Deepak Sundaram\n\n### Record Attributes & Fields\n- **id:** `EMP-203`\n- **name:** `Deepak Sundaram`\n- **role:** `Substation FLP Electrician`\n- **department:** `High Voltage Distribution Hub`\n- **location:** `Winding Pit #1`\n- **clearance:** `3`\n- **access_token:** `FLP-ELEC-401`",
+    "created_at": 1789484572.8868854
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-204",
+    "title": "Mine Safety & Ventilation: Nisha Ganguly (EMP-204)",
+    "category": "Mine Safety & Ventilation",
+    "clearance_level": 3,
+    "metadata": {
+      "record_id": "EMP-204",
+      "title": "Nisha Ganguly",
+      "category": "Mine Safety & Ventilation",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Nisha Ganguly\n\n### Record Attributes & Fields\n- **id:** `EMP-204`\n- **name:** `Nisha Ganguly`\n- **role:** `Underground Gas Testing Analyst`\n- **department:** `Mine Safety & Ventilation`\n- **location:** `Shaft #4 Return`\n- **clearance:** `3`\n- **access_token:** `LAB-GAS-204`",
+    "created_at": 1789484572.8869061
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-205",
+    "title": "Opencast Overburden Bench: Rajendra Murmu (EMP-205)",
+    "category": "Opencast Overburden Bench",
+    "clearance_level": 2,
+    "metadata": {
+      "record_id": "EMP-205",
+      "title": "Rajendra Murmu",
+      "category": "Opencast Overburden Bench",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Rajendra Murmu\n\n### Record Attributes & Fields\n- **id:** `EMP-205`\n- **name:** `Rajendra Murmu`\n- **role:** `Heavy Dragline Class-1 Operator`\n- **department:** `Opencast Overburden Bench`\n- **location:** `Zone Bravo`\n- **clearance:** `2`\n- **access_token:** `DRAG-771`",
+    "created_at": 1789484572.886925
+  },
+  {
+    "doc_id": "DOC-IMPORT-EMP-206",
+    "title": "Central Emergency Rescue Post: Sanjay Biswas (EMP-206)",
+    "category": "Central Emergency Rescue Post",
+    "clearance_level": 4,
+    "metadata": {
+      "record_id": "EMP-206",
+      "title": "Sanjay Biswas",
+      "category": "Central Emergency Rescue Post",
+      "source": "tabular_import",
+      "fields": [
+        "id",
+        "name",
+        "role",
+        "department",
+        "location",
+        "clearance",
+        "access_token"
+      ]
+    },
+    "content": "# Structured Record: Sanjay Biswas\n\n### Record Attributes & Fields\n- **id:** `EMP-206`\n- **name:** `Sanjay Biswas`\n- **role:** `Mine Rescue Team Captain`\n- **department:** `Central Emergency Rescue Post`\n- **location:** `Surface HQ`\n- **clearance:** `4`\n- **access_token:** `RESCUE-CMD-900`",
+    "created_at": 1789484572.886945
   }
 ]
